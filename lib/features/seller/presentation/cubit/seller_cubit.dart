@@ -11,22 +11,36 @@ class SellerCubit extends Cubit<SellerState> {
 
   SellerCubit({required SellerRepository repository})
     : _repository = repository,
-      super(SellerInitial());
+      super(SellerInitial()) {
+    _loadInitialData();
+  }
 
-  Future<void> loadSellers() async {
+  Future<void> _loadInitialData() async {
     emit(SellerLoading());
-
     try {
       final sellers = await _repository.getSellers();
-      emit(SellerLoaded(sellers: sellers));
+      final cachedSeller = await _repository.getSelectedSeller();
+      emit(SellerLoaded(sellers: sellers, selectedSeller: cachedSeller));
     } catch (e) {
       emit(SellerError(e.toString()));
     }
   }
 
-  void selectSeller(Seller seller) {
+  Future<void> loadSellers() async {
+    emit(SellerLoading());
+    try {
+      final sellers = await _repository.getSellers();
+      final cachedSeller = await _repository.getSelectedSeller();
+      emit(SellerLoaded(sellers: sellers, selectedSeller: cachedSeller));
+    } catch (e) {
+      emit(SellerError(e.toString()));
+    }
+  }
+
+  Future<void> selectSeller(Seller seller) async {
     if (state is SellerLoaded) {
       final currentState = state as SellerLoaded;
+      await _repository.saveSelectedSeller(seller);
       emit(SellerLoaded(sellers: currentState.sellers, selectedSeller: seller));
     }
   }

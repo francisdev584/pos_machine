@@ -14,11 +14,15 @@ final GetIt getIt = GetIt.instance;
 Future<void> init() async {
   // External
   getIt.registerLazySingleton(() => Dio());
-  // getIt.registerLazySingleton(() => SharedPreferences.getInstance());
+  final sharedPreferences = await SharedPreferences.getInstance();
+  getIt.registerLazySingleton(() => sharedPreferences);
+
+  // Services
+  getIt.registerLazySingleton<CacheService>(() => CacheService(getIt()));
 
   // Repositories
   getIt.registerLazySingleton<SellerRepository>(
-    () => SellerRepositoryImpl(EnvConfig.apiUrl, getIt()),
+    () => SellerRepositoryImpl(EnvConfig.apiUrl, getIt(), getIt()),
   );
   getIt.registerLazySingleton<ProductRepository>(
     () => ProductRepositoryImpl(EnvConfig.apiUrl, getIt()),

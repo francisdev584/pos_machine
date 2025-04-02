@@ -25,6 +25,16 @@ class Seller extends Equatable {
     };
   }
 
+  factory Seller.fromMap(Map<String, dynamic> json) {
+    return Seller(
+      id: json['id'] as int,
+      name: json['name'] as String,
+      email: json['email'] as String,
+      phone: json['phone'] as String,
+      address: json['address'] as String,
+    );
+  }
+
   factory Seller.fromJson(Map<String, dynamic> json) {
     return Seller(
       id: json['id'] as int,

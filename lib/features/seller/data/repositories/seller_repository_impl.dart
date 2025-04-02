@@ -4,11 +4,11 @@ import 'package:dio/dio.dart';
 import 'package:pos_machine/features/seller/domain/entities/seller.dart';
 import 'package:pos_machine/features/seller/domain/repositories/seller_repository.dart';
 
-class SellerRepositoryImpl implements SellerRepository {
+class SellerRepositoryImpl extends SellerRepository {
   final Dio _dio;
   final String _baseUrl;
 
-  SellerRepositoryImpl(String baseUrl, Dio dio)
+  SellerRepositoryImpl(String baseUrl, Dio dio, super.cacheService)
     : _baseUrl = baseUrl,
       _dio = dio;
 
@@ -26,5 +26,20 @@ class SellerRepositoryImpl implements SellerRepository {
     } catch (e) {
       throw Exception('Erro ao carregar vendedores: ${e.toString()}');
     }
+  }
+
+  @override
+  Future<void> saveSelectedSeller(Seller seller) async {
+    await saveToCache('selected_seller', seller, (s) => s.toJson());
+  }
+
+  @override
+  Future<Seller?> getSelectedSeller() async {
+    return await getFromCache('selected_seller', Seller.fromMap);
+  }
+
+  @override
+  Future<void> clearSelectedSeller() async {
+    await clearCache('selected_seller');
   }
 }
