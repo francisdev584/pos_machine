@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:pos_machine/core/theme/app_theme.dart';
 import 'package:pos_machine/features/product/domain/entities/product.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 class ProductListItem extends StatelessWidget {
   final Product product;
@@ -69,6 +71,13 @@ class ProductListItem extends StatelessWidget {
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(height: 4.h),
+                    Text(
+                      'ID: ${product.id}',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: AppTheme.textSecondaryColor,
+                      ),
                     ),
                     SizedBox(height: 4.h),
                     Text(
