@@ -34,16 +34,9 @@ class ShoppingCartWidget extends StatelessWidget {
             padding: EdgeInsets.all(16.w),
             decoration: BoxDecoration(
               color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 4,
-                  offset: const Offset(0, -2),
-                ),
-              ],
+              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
             ),
             child: Column(
-              mainAxisSize: MainAxisSize.min,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -63,10 +56,10 @@ class ShoppingCartWidget extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 16.h),
-                Container(
-                  constraints: BoxConstraints(maxHeight: 200.h),
+                Expanded(
+                  // constraints: BoxConstraints.expand(height: 330.spMin),
+                  // // margin: EdgeInsets.only(bottom: 50),
                   child: ListView.builder(
-                    shrinkWrap: true,
                     itemCount: state.selectedProducts.length,
                     itemBuilder: (context, index) {
                       final product = state.selectedProducts[index];
