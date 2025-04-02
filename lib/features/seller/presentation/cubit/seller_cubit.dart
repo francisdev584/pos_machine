@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:pos_machine/features/seller/data/repositories/seller_repository_impl.dart';
 import 'package:pos_machine/features/seller/domain/entities/seller.dart';
 import 'package:pos_machine/features/seller/domain/repositories/seller_repository.dart';
 
@@ -10,8 +9,8 @@ part 'seller_state.dart';
 class SellerCubit extends Cubit<SellerState> {
   final SellerRepository _repository;
 
-  SellerCubit({SellerRepository? repository})
-    : _repository = repository ?? SellerRepositoryImpl(),
+  SellerCubit({required SellerRepository repository})
+    : _repository = repository,
       super(SellerInitial());
 
   Future<void> loadSellers() async {

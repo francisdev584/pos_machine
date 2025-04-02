@@ -7,7 +7,7 @@ class SellerRepositoryImpl implements SellerRepository {
   final Dio _dio;
   final String _baseUrl = 'https://fakestoreapi.com';
 
-  SellerRepositoryImpl({Dio? dio}) : _dio = dio ?? Dio();
+  SellerRepositoryImpl({required Dio dio}) : _dio = dio;
 
   @override
   Future<List<Seller>> getSellers() async {
