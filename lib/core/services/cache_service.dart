@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class CacheService {
   static const String _selectedSellerKey = 'selected_seller';
   static const String _selectedProductsKey = 'selected_products';
+  static const String _expirationPrefix = 'exp_';
 
   final SharedPreferences _prefs;
 
@@ -13,15 +14,39 @@ class CacheService {
   Future<Map<String, dynamic>?> get(String key) async {
     final json = _prefs.getString(key);
     if (json == null) return null;
+
+    // Verifica se o cache expirou
+    final expirationKey = _expirationPrefix + key;
+    final expirationTimestamp = _prefs.getInt(expirationKey);
+    if (expirationTimestamp != null &&
+        DateTime.now().millisecondsSinceEpoch > expirationTimestamp) {
+      await remove(key);
+      await _prefs.remove(expirationKey);
+      return null;
+    }
+
     return jsonDecode(json);
   }
 
-  Future<void> save(String key, Map<String, dynamic> data) async {
+  Future<void> save(
+    String key,
+    Map<String, dynamic> data, {
+    Duration? expiration,
+  }) async {
     await _prefs.setString(key, jsonEncode(data));
+
+    if (expiration != null) {
+      final expirationTimestamp =
+          DateTime.now().millisecondsSinceEpoch + expiration.inMilliseconds;
+      await _prefs.setInt(_expirationPrefix + key, expirationTimestamp);
+    } else {
+      await _prefs.remove(_expirationPrefix + key);
+    }
   }
 
   Future<void> remove(String key) async {
     await _prefs.remove(key);
+    await _prefs.remove(_expirationPrefix + key);
   }
 
   Future<void> clear() async {
