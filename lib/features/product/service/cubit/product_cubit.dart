@@ -13,7 +13,27 @@ class ProductCubit extends Cubit<ProductState> {
 
   ProductCubit({required ProductRepository repository})
     : _repository = repository,
-      super(ProductInitial());
+      super(ProductInitial()) {
+    _loadInitialData();
+  }
+
+  Future<void> _loadInitialData() async {
+    emit(ProductLoading());
+    try {
+      _allProducts = await _repository.getProducts();
+      _categories = await _repository.getCategories();
+
+      emit(
+        ProductLoaded(
+          products: _allProducts,
+          categories: _categories,
+          selectedProducts: [],
+        ),
+      );
+    } catch (e) {
+      emit(ProductError(e.toString()));
+    }
+  }
 
   Future<void> loadProducts({bool forceRefresh = false}) async {
     emit(ProductLoading());
