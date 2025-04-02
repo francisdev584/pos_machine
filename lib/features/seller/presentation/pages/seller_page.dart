@@ -6,8 +6,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pos_machine/core/di/injection_container.dart';
 import 'package:pos_machine/core/navigation/routes.dart';
 import 'package:pos_machine/core/theme/app_theme.dart';
-import 'package:pos_machine/features/seller/presentation/cubit/seller_cubit.dart';
 import 'package:pos_machine/features/seller/presentation/widgets/seller_list_item.dart';
+import 'package:pos_machine/features/seller/service/cubit/seller_cubit.dart';
 
 class SellerPage extends StatelessWidget {
   const SellerPage({super.key});

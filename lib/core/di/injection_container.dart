@@ -12,7 +12,7 @@ import 'package:pos_machine/features/sale/domain/repositories/sale_repository.da
 import 'package:pos_machine/features/sale/presentation/cubit/sale_cubit.dart';
 import 'package:pos_machine/features/seller/data/repositories/seller_repository_impl.dart';
 import 'package:pos_machine/features/seller/domain/repositories/seller_repository.dart';
-import 'package:pos_machine/features/seller/presentation/cubit/seller_cubit.dart';
+import 'package:pos_machine/features/seller/service/cubit/seller_cubit.dart';
 
 final GetIt getIt = GetIt.instance;
 
