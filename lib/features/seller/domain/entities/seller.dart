@@ -15,13 +15,23 @@ class Seller extends Equatable {
     required this.address,
   });
 
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'id': id,
+      'name': name,
+      'email': email,
+      'phone': phone,
+      'address': address,
+    };
+  }
+
   factory Seller.fromJson(Map<String, dynamic> json) {
     return Seller(
-      id: json['id'],
-      name: json['name'],
-      email: json['email'],
-      phone: json['phone'],
-      address: json['address']['street'],
+      id: json['id'] as int,
+      name: '${json['name']['firstname']} ${json['name']['lastname']}',
+      email: json['email'] as String,
+      phone: json['phone'] as String,
+      address: json['address']['street'] as String,
     );
   }
 
