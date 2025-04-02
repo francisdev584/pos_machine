@@ -6,7 +6,7 @@ import 'package:pos_machine/core/config/env_config.dart';
 import 'package:pos_machine/core/services/cache_service.dart';
 import 'package:pos_machine/features/product/data/repositories/product_repository_impl.dart';
 import 'package:pos_machine/features/product/domain/repositories/product_repository.dart';
-import 'package:pos_machine/features/product/presentation/cubit/product_cubit.dart';
+import 'package:pos_machine/features/product/service/cubit/product_cubit.dart';
 import 'package:pos_machine/features/sale/data/repositories/sale_repository_impl.dart';
 import 'package:pos_machine/features/sale/domain/repositories/sale_repository.dart';
 import 'package:pos_machine/features/sale/presentation/cubit/sale_cubit.dart';

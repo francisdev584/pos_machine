@@ -6,9 +6,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pos_machine/core/di/injection_container.dart';
 import 'package:pos_machine/core/navigation/routes.dart';
 import 'package:pos_machine/core/theme/app_theme.dart';
-import 'package:pos_machine/features/product/presentation/cubit/product_cubit.dart';
 import 'package:pos_machine/features/product/presentation/widgets/product_list_item.dart';
 import 'package:pos_machine/features/product/presentation/widgets/product_search_bar.dart';
+import 'package:pos_machine/features/product/service/cubit/product_cubit.dart';
 
 class ProductPage extends StatelessWidget {
   const ProductPage({super.key});
