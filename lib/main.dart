@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import 'package:pos_machine/core/config/env_config.dart';
 import 'package:pos_machine/core/di/injection_container.dart' as di;
 import 'package:pos_machine/core/navigation/routes.dart';
 import 'package:pos_machine/core/theme/app_theme.dart';
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       builder: (context, child) {
         return MaterialApp(
-          title: 'PDV Loja Fácil',
+          title: EnvConfig.appName,
           debugShowCheckedModeBanner: false,
           theme: AppTheme.lightTheme,
           initialRoute: Routes.home, // Defina a rota inicial
