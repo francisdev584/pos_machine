@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import 'package:pos_machine/core/navigation/routes.dart';
 import 'package:pos_machine/core/theme/app_theme.dart';
 import 'package:pos_machine/features/home/presentation/pages/home_page.dart';
 
@@ -23,7 +24,8 @@ class MyApp extends StatelessWidget {
           title: 'PDV Loja Fácil',
           debugShowCheckedModeBanner: false,
           theme: AppTheme.lightTheme,
-          home: const HomePage(),
+          initialRoute: Routes.home, // Defina a rota inicial
+          onGenerateRoute: Routes.generateRoute,
         );
       },
     );

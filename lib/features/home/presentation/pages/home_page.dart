@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import 'package:pos_machine/core/navigation/routes.dart';
 import 'package:pos_machine/core/theme/app_theme.dart';
 import 'package:pos_machine/features/home/presentation/widget/option_card_widget.dart';
 // import 'package:pos_machine/features/admin/presentation/pages/admin_login_page.dart';
@@ -33,7 +34,7 @@ class HomePage extends StatelessWidget {
                 context: context,
                 title: 'Venda',
                 icon: Icons.shopping_cart,
-                onTap: () {},
+                onTap: () => Navigator.pushNamed(context, Routes.seller),
               ),
               SizedBox(height: 24.h),
               OptionCardWidget(
