@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:pos_machine/core/di/injection_container.dart';
+import 'package:pos_machine/core/navigation/routes.dart';
 import 'package:pos_machine/core/theme/app_theme.dart';
 import 'package:pos_machine/features/product/presentation/cubit/product_cubit.dart';
 import 'package:pos_machine/features/product/presentation/widgets/product_list_item.dart';
@@ -91,9 +92,8 @@ class ProductPage extends StatelessWidget {
                       ),
                       SizedBox(height: 16.h),
                       ElevatedButton(
-                        onPressed: () {
-                          // TODO: Navegar para a página de resumo da venda
-                        },
+                        onPressed:
+                            () => Navigator.pushNamed(context, Routes.sale),
                         child: const Text('Continuar'),
                       ),
                     ],
