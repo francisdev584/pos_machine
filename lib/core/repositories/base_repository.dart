@@ -17,9 +17,10 @@ abstract class BaseRepository {
   Future<void> saveToCache<T>(
     String key,
     T data,
-    Map<String, dynamic> Function(T) toJson,
-  ) async {
-    await _cacheService.save(key, toJson(data));
+    Map<String, dynamic> Function(T) toJson, {
+    Duration? expiration,
+  }) async {
+    await _cacheService.save(key, toJson(data), expiration: expiration);
   }
 
   Future<void> clearCache(String key) async {

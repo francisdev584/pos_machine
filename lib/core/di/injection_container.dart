@@ -27,7 +27,7 @@ Future<void> init() async {
     () => SellerRepositoryImpl(getIt(), getIt()),
   );
   getIt.registerLazySingleton<ProductRepository>(
-    () => ProductRepositoryImpl(EnvConfig.apiUrl, getIt()),
+    () => ProductRepositoryImpl(getIt(), getIt()),
   );
 
   // Cubits
