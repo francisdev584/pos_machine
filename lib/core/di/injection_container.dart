@@ -9,7 +9,7 @@ import 'package:pos_machine/features/product/domain/repositories/product_reposit
 import 'package:pos_machine/features/product/service/cubit/product_cubit.dart';
 import 'package:pos_machine/features/sale/data/repositories/sale_repository_impl.dart';
 import 'package:pos_machine/features/sale/domain/repositories/sale_repository.dart';
-import 'package:pos_machine/features/sale/presentation/cubit/sale_cubit.dart';
+import 'package:pos_machine/features/sale/service/cubit/sale_cubit.dart';
 import 'package:pos_machine/features/seller/data/repositories/seller_repository_impl.dart';
 import 'package:pos_machine/features/seller/domain/repositories/seller_repository.dart';
 import 'package:pos_machine/features/seller/service/cubit/seller_cubit.dart';

@@ -5,8 +5,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:pos_machine/core/di/injection_container.dart';
 import 'package:pos_machine/core/theme/app_theme.dart';
-import 'package:pos_machine/features/sale/presentation/cubit/sale_cubit.dart';
 import 'package:pos_machine/features/sale/presentation/widgets/sale_summary_item.dart';
+import 'package:pos_machine/features/sale/service/cubit/sale_cubit.dart';
 
 class SaleSummaryPage extends StatelessWidget {
   const SaleSummaryPage({super.key});
