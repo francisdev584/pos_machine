@@ -19,8 +19,7 @@ class SellerCubit extends Cubit<SellerState> {
     emit(SellerLoading());
     try {
       final sellers = await _repository.getSellers();
-      final cachedSeller = await _repository.getSelectedSeller();
-      emit(SellerLoaded(sellers: sellers, selectedSeller: cachedSeller));
+      emit(SellerLoaded(sellers: sellers));
     } catch (e) {
       emit(SellerError(e.toString()));
     }
