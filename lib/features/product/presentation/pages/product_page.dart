@@ -9,6 +9,7 @@ import 'package:pos_machine/features/product/presentation/widgets/product_list_i
 import 'package:pos_machine/features/product/presentation/widgets/product_search_bar.dart';
 import 'package:pos_machine/features/product/presentation/widgets/shopping_cart_widget.dart';
 import 'package:pos_machine/features/product/service/cubit/product_cubit.dart';
+import 'package:pos_machine/features/sale/service/cubit/sale_cubit.dart';
 
 class ProductPage extends StatelessWidget {
   const ProductPage({super.key});
@@ -19,9 +20,9 @@ class ProductPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Produtos'),
         actions: [
-          BlocBuilder<ProductCubit, ProductState>(
+          BlocBuilder<SaleCubit, SaleState>(
             builder: (context, state) {
-              if (state is ProductLoaded && state.selectedProducts.isNotEmpty) {
+              if (state is SaleLoaded && state.selectedProducts.isNotEmpty) {
                 return Stack(
                   children: [
                     IconButton(
@@ -66,34 +67,47 @@ class ProductPage extends StatelessWidget {
                                             ),
                                           ),
                                           Expanded(
-                                            child: ShoppingCartWidget(
-                                              selectedProducts:
-                                                  state.selectedProducts,
-                                              quantities: state.quantities,
-                                              onQuantityChanged: (
-                                                product,
-                                                quantity,
-                                              ) {
-                                                context
-                                                    .read<ProductCubit>()
-                                                    .updateQuantity(
+                                            child: BlocBuilder<
+                                              SaleCubit,
+                                              SaleState
+                                            >(
+                                              builder: (context, state) {
+                                                if (state is SaleLoaded) {
+                                                  return ShoppingCartWidget(
+                                                    selectedProducts:
+                                                        state.selectedProducts,
+                                                    quantities:
+                                                        state.quantities,
+                                                    onQuantityChanged: (
                                                       product,
                                                       quantity,
-                                                    );
+                                                    ) {
+                                                      context
+                                                          .read<SaleCubit>()
+                                                          .updateQuantity(
+                                                            product,
+                                                            quantity,
+                                                          );
+                                                    },
+                                                    onRemoveProduct: (product) {
+                                                      context
+                                                          .read<SaleCubit>()
+                                                          .removeProduct(
+                                                            product,
+                                                          );
+                                                    },
+                                                    onCheckout: () {
+                                                      Navigator.pop(context);
+                                                      Navigator.pushNamed(
+                                                        context,
+                                                        Routes.sale,
+                                                      );
+                                                    },
+                                                    total: state.total,
+                                                  );
+                                                }
+                                                return const SizedBox.shrink();
                                               },
-                                              onRemoveProduct: (product) {
-                                                context
-                                                    .read<ProductCubit>()
-                                                    .removeProduct(product);
-                                              },
-                                              onCheckout: () {
-                                                Navigator.pop(context);
-                                                Navigator.pushNamed(
-                                                  context,
-                                                  Routes.sale,
-                                                );
-                                              },
-                                              total: state.total,
                                             ),
                                           ),
                                         ],
@@ -168,11 +182,19 @@ class ProductPage extends StatelessWidget {
                     itemCount: state.products.length,
                     itemBuilder: (context, index) {
                       final product = state.products[index];
-                      return ProductListItem(
-                        product: product,
-                        isSelected: state.selectedProducts.contains(product),
-                        onTap: () {
-                          context.read<ProductCubit>().toggleProduct(product);
+                      return BlocBuilder<SaleCubit, SaleState>(
+                        builder: (context, saleState) {
+                          final isSelected =
+                              saleState is SaleLoaded &&
+                              saleState.selectedProducts.contains(product);
+                          return ProductListItem(
+                            key: ValueKey(product.id),
+                            product: product,
+                            isSelected: isSelected,
+                            onTap: () {
+                              context.read<SaleCubit>().toggleProduct(product);
+                            },
+                          );
                         },
                       );
                     },

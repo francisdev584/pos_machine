@@ -10,16 +10,20 @@ abstract class SaleState extends Equatable {
 class SaleInitial extends SaleState {}
 
 class SaleLoaded extends SaleState {
-  final List<Product> products;
+  final List<Product> selectedProducts;
+  final Map<Product, int> quantities;
 
-  const SaleLoaded({required this.products});
+  const SaleLoaded({required this.selectedProducts, required this.quantities});
 
   double get total {
-    return products.fold(0, (sum, product) => sum + product.price);
+    return selectedProducts.fold(
+      0,
+      (sum, product) => sum + (product.price * (quantities[product] ?? 1)),
+    );
   }
 
   @override
-  List<Object?> get props => [products];
+  List<Object?> get props => [selectedProducts, quantities];
 }
 
 class SaleSuccess extends SaleState {}

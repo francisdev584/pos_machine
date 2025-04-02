@@ -23,13 +23,7 @@ class ProductCubit extends Cubit<ProductState> {
       _allProducts = await _repository.getProducts();
       _categories = await _repository.getCategories();
 
-      emit(
-        ProductLoaded(
-          products: _allProducts,
-          categories: _categories,
-          selectedProducts: [],
-        ),
-      );
+      emit(ProductLoaded(products: _allProducts, categories: _categories));
     } catch (e) {
       emit(ProductError(e.toString()));
     }
@@ -42,24 +36,7 @@ class ProductCubit extends Cubit<ProductState> {
       _allProducts = await _repository.getProducts(forceRefresh: forceRefresh);
       _categories = await _repository.getCategories(forceRefresh: forceRefresh);
 
-      if (state is ProductLoaded) {
-        final currentState = state as ProductLoaded;
-        emit(
-          ProductLoaded(
-            products: _allProducts,
-            categories: _categories,
-            selectedProducts: currentState.selectedProducts,
-          ),
-        );
-      } else {
-        emit(
-          ProductLoaded(
-            products: _allProducts,
-            categories: _categories,
-            selectedProducts: [],
-          ),
-        );
-      }
+      emit(ProductLoaded(products: _allProducts, categories: _categories));
     } catch (e) {
       emit(ProductError(e.toString()));
     }
@@ -77,24 +54,7 @@ class ProductCubit extends Cubit<ProductState> {
         forceRefresh: forceRefresh,
       );
 
-      if (state is ProductLoaded) {
-        final currentState = state as ProductLoaded;
-        emit(
-          ProductLoaded(
-            products: products,
-            categories: _categories,
-            selectedProducts: currentState.selectedProducts,
-          ),
-        );
-      } else {
-        emit(
-          ProductLoaded(
-            products: products,
-            categories: _categories,
-            selectedProducts: [],
-          ),
-        );
-      }
+      emit(ProductLoaded(products: products, categories: _categories));
     } catch (e) {
       emit(ProductError(e.toString()));
     }
@@ -102,7 +62,6 @@ class ProductCubit extends Cubit<ProductState> {
 
   void searchProducts(String query) {
     if (state is ProductLoaded) {
-      final currentState = state as ProductLoaded;
       final filteredProducts =
           _allProducts.where((product) {
             final searchLower = query.toLowerCase();
@@ -110,121 +69,7 @@ class ProductCubit extends Cubit<ProductState> {
                 product.id.toString().contains(searchLower);
           }).toList();
 
-      emit(
-        ProductLoaded(
-          products: filteredProducts,
-          categories: _categories,
-          selectedProducts: currentState.selectedProducts,
-        ),
-      );
-    }
-  }
-
-  void toggleProduct(Product product) {
-    if (state is ProductLoaded) {
-      final currentState = state as ProductLoaded;
-      final selectedProducts = List<Product>.from(
-        currentState.selectedProducts,
-      );
-      final quantities = Map<Product, int>.from(currentState.quantities);
-
-      if (selectedProducts.contains(product)) {
-        selectedProducts.remove(product);
-        quantities.remove(product);
-      } else if (selectedProducts.length < 10) {
-        selectedProducts.add(product);
-        quantities[product] = 1;
-      }
-
-      emit(
-        ProductLoaded(
-          products: currentState.products,
-          categories: _categories,
-          selectedProducts: selectedProducts,
-          quantities: quantities,
-        ),
-      );
-    }
-  }
-
-  void updateQuantity(Product product, int quantity) {
-    if (state is ProductLoaded) {
-      final currentState = state as ProductLoaded;
-      final quantities = Map<Product, int>.from(currentState.quantities);
-
-      if (quantity > 0) {
-        quantities[product] = quantity;
-      } else {
-        quantities.remove(product);
-      }
-
-      emit(
-        ProductLoaded(
-          products: currentState.products,
-          categories: _categories,
-          selectedProducts: currentState.selectedProducts,
-          quantities: quantities,
-        ),
-      );
-    }
-  }
-
-  void removeProduct(Product product) {
-    if (state is ProductLoaded) {
-      final currentState = state as ProductLoaded;
-      final selectedProducts = List<Product>.from(
-        currentState.selectedProducts,
-      );
-      final quantities = Map<Product, int>.from(currentState.quantities);
-
-      selectedProducts.remove(product);
-      quantities.remove(product);
-
-      emit(
-        ProductLoaded(
-          products: currentState.products,
-          categories: _categories,
-          selectedProducts: selectedProducts,
-          quantities: quantities,
-        ),
-      );
-    }
-  }
-
-  Future<void> saveSelectedProducts() async {
-    if (state is ProductLoaded) {
-      final currentState = state as ProductLoaded;
-      await _repository.saveSelectedProducts(currentState.selectedProducts);
-    }
-  }
-
-  Future<void> loadSelectedProducts() async {
-    if (state is ProductLoaded) {
-      final currentState = state as ProductLoaded;
-      final selectedProducts = await _repository.getSelectedProducts();
-
-      emit(
-        ProductLoaded(
-          products: currentState.products,
-          categories: _categories,
-          selectedProducts: selectedProducts,
-        ),
-      );
-    }
-  }
-
-  Future<void> clearSelectedProducts() async {
-    if (state is ProductLoaded) {
-      final currentState = state as ProductLoaded;
-      await _repository.clearSelectedProducts();
-
-      emit(
-        ProductLoaded(
-          products: currentState.products,
-          categories: _categories,
-          selectedProducts: [],
-        ),
-      );
+      emit(ProductLoaded(products: filteredProducts, categories: _categories));
     }
   }
 }
