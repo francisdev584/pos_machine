@@ -13,7 +13,9 @@ final GetIt getIt = GetIt.instance;
 
 Future<void> init() async {
   // External
-  getIt.registerLazySingleton(() => Dio());
+  getIt.registerLazySingleton(
+    () => Dio(BaseOptions(baseUrl: EnvConfig.apiUrl)),
+  );
   final sharedPreferences = await SharedPreferences.getInstance();
   getIt.registerLazySingleton(() => sharedPreferences);
 
@@ -22,7 +24,7 @@ Future<void> init() async {
 
   // Repositories
   getIt.registerLazySingleton<SellerRepository>(
-    () => SellerRepositoryImpl(EnvConfig.apiUrl, getIt(), getIt()),
+    () => SellerRepositoryImpl(getIt(), getIt()),
   );
   getIt.registerLazySingleton<ProductRepository>(
     () => ProductRepositoryImpl(EnvConfig.apiUrl, getIt()),

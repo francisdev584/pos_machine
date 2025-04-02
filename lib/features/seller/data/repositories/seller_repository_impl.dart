@@ -6,16 +6,13 @@ import 'package:pos_machine/features/seller/domain/repositories/seller_repositor
 
 class SellerRepositoryImpl extends SellerRepository {
   final Dio _dio;
-  final String _baseUrl;
 
-  SellerRepositoryImpl(String baseUrl, Dio dio, super.cacheService)
-    : _baseUrl = baseUrl,
-      _dio = dio;
+  SellerRepositoryImpl(Dio dio, super.cacheService) : _dio = dio;
 
   @override
   Future<List<Seller>> getSellers() async {
     try {
-      final response = await _dio.get('$_baseUrl/users');
+      final response = await _dio.get('/users');
 
       if (response.statusCode == 200) {
         final List<dynamic> data = response.data;
