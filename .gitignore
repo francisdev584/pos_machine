@@ -49,3 +49,7 @@ app.*.map.json
 
 # vscode
 .vscode/launch.json
+
+# Configuration files
+config/development.json
+config/production.json
