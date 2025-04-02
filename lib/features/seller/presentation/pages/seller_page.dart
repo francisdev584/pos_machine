@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:pos_machine/core/di/injection_container.dart';
+import 'package:pos_machine/core/navigation/routes.dart';
 import 'package:pos_machine/core/theme/app_theme.dart';
 import 'package:pos_machine/features/seller/presentation/cubit/seller_cubit.dart';
 import 'package:pos_machine/features/seller/presentation/widgets/seller_list_item.dart';
@@ -68,9 +69,8 @@ class SellerPage extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.all(16.w),
                   child: ElevatedButton(
-                    onPressed: () {
-                      // TODO: Navegar para a página de produtos
-                    },
+                    onPressed:
+                        () => Navigator.pushNamed(context, Routes.product),
                     child: const Text('Continuar'),
                   ),
                 ),
