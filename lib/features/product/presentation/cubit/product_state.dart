@@ -14,10 +14,12 @@ class ProductLoading extends ProductState {}
 class ProductLoaded extends ProductState {
   final List<Product> products;
   final List<Product> selectedProducts;
+  final List<String> categories;
 
   const ProductLoaded({
     required this.products,
     this.selectedProducts = const [],
+    required this.categories,
   });
 
   double get total {
@@ -25,7 +27,7 @@ class ProductLoaded extends ProductState {
   }
 
   @override
-  List<Object?> get props => [products, selectedProducts];
+  List<Object?> get props => [products, selectedProducts, categories];
 }
 
 class ProductError extends ProductState {

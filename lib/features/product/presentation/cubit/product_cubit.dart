@@ -9,17 +9,72 @@ part 'product_state.dart';
 class ProductCubit extends Cubit<ProductState> {
   final ProductRepository _repository;
   List<Product> _allProducts = [];
+  List<String> _categories = [];
 
   ProductCubit({required ProductRepository repository})
     : _repository = repository,
       super(ProductInitial());
 
-  Future<void> loadProducts() async {
+  Future<void> loadProducts({bool forceRefresh = false}) async {
     emit(ProductLoading());
 
     try {
-      _allProducts = await _repository.getProducts();
-      emit(ProductLoaded(products: _allProducts));
+      _allProducts = await _repository.getProducts(forceRefresh: forceRefresh);
+      _categories = await _repository.getCategories(forceRefresh: forceRefresh);
+
+      if (state is ProductLoaded) {
+        final currentState = state as ProductLoaded;
+        emit(
+          ProductLoaded(
+            products: _allProducts,
+            categories: _categories,
+            selectedProducts: currentState.selectedProducts,
+          ),
+        );
+      } else {
+        emit(
+          ProductLoaded(
+            products: _allProducts,
+            categories: _categories,
+            selectedProducts: [],
+          ),
+        );
+      }
+    } catch (e) {
+      emit(ProductError(e.toString()));
+    }
+  }
+
+  Future<void> loadProductsByCategory(
+    String category, {
+    bool forceRefresh = false,
+  }) async {
+    emit(ProductLoading());
+
+    try {
+      final products = await _repository.getProductsByCategory(
+        category,
+        forceRefresh: forceRefresh,
+      );
+
+      if (state is ProductLoaded) {
+        final currentState = state as ProductLoaded;
+        emit(
+          ProductLoaded(
+            products: products,
+            categories: _categories,
+            selectedProducts: currentState.selectedProducts,
+          ),
+        );
+      } else {
+        emit(
+          ProductLoaded(
+            products: products,
+            categories: _categories,
+            selectedProducts: [],
+          ),
+        );
+      }
     } catch (e) {
       emit(ProductError(e.toString()));
     }
@@ -38,6 +93,7 @@ class ProductCubit extends Cubit<ProductState> {
       emit(
         ProductLoaded(
           products: filteredProducts,
+          categories: _categories,
           selectedProducts: currentState.selectedProducts,
         ),
       );
@@ -60,7 +116,45 @@ class ProductCubit extends Cubit<ProductState> {
       emit(
         ProductLoaded(
           products: currentState.products,
+          categories: _categories,
           selectedProducts: selectedProducts,
+        ),
+      );
+    }
+  }
+
+  Future<void> saveSelectedProducts() async {
+    if (state is ProductLoaded) {
+      final currentState = state as ProductLoaded;
+      await _repository.saveSelectedProducts(currentState.selectedProducts);
+    }
+  }
+
+  Future<void> loadSelectedProducts() async {
+    if (state is ProductLoaded) {
+      final currentState = state as ProductLoaded;
+      final selectedProducts = await _repository.getSelectedProducts();
+
+      emit(
+        ProductLoaded(
+          products: currentState.products,
+          categories: _categories,
+          selectedProducts: selectedProducts,
+        ),
+      );
+    }
+  }
+
+  Future<void> clearSelectedProducts() async {
+    if (state is ProductLoaded) {
+      final currentState = state as ProductLoaded;
+      await _repository.clearSelectedProducts();
+
+      emit(
+        ProductLoaded(
+          products: currentState.products,
+          categories: _categories,
+          selectedProducts: [],
         ),
       );
     }
