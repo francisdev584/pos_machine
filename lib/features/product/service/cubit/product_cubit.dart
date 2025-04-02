@@ -126,11 +126,14 @@ class ProductCubit extends Cubit<ProductState> {
       final selectedProducts = List<Product>.from(
         currentState.selectedProducts,
       );
+      final quantities = Map<Product, int>.from(currentState.quantities);
 
       if (selectedProducts.contains(product)) {
         selectedProducts.remove(product);
+        quantities.remove(product);
       } else if (selectedProducts.length < 10) {
         selectedProducts.add(product);
+        quantities[product] = 1;
       }
 
       emit(
@@ -138,6 +141,51 @@ class ProductCubit extends Cubit<ProductState> {
           products: currentState.products,
           categories: _categories,
           selectedProducts: selectedProducts,
+          quantities: quantities,
+        ),
+      );
+    }
+  }
+
+  void updateQuantity(Product product, int quantity) {
+    if (state is ProductLoaded) {
+      final currentState = state as ProductLoaded;
+      final quantities = Map<Product, int>.from(currentState.quantities);
+
+      if (quantity > 0) {
+        quantities[product] = quantity;
+      } else {
+        quantities.remove(product);
+      }
+
+      emit(
+        ProductLoaded(
+          products: currentState.products,
+          categories: _categories,
+          selectedProducts: currentState.selectedProducts,
+          quantities: quantities,
+        ),
+      );
+    }
+  }
+
+  void removeProduct(Product product) {
+    if (state is ProductLoaded) {
+      final currentState = state as ProductLoaded;
+      final selectedProducts = List<Product>.from(
+        currentState.selectedProducts,
+      );
+      final quantities = Map<Product, int>.from(currentState.quantities);
+
+      selectedProducts.remove(product);
+      quantities.remove(product);
+
+      emit(
+        ProductLoaded(
+          products: currentState.products,
+          categories: _categories,
+          selectedProducts: selectedProducts,
+          quantities: quantities,
         ),
       );
     }
