@@ -4,9 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:pos_machine/core/navigation/routes.dart';
 import 'package:pos_machine/core/theme/app_theme.dart';
-import 'package:pos_machine/features/home/presentation/widget/option_card_widget.dart';
-// import 'package:pos_machine/features/admin/presentation/pages/admin_login_page.dart';
-// import 'package:pos_machine/features/seller/presentation/pages/seller_page.dart';
+import 'package:pos_machine/features/home/presentation/widget/main_button.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -14,33 +12,61 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(24.w),
+          padding: EdgeInsets.symmetric(horizontal: 24.w),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              SizedBox(height: 24.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 84.w,
+                    height: 84.w,
+                    decoration: BoxDecoration(
+                      color: AppTheme.primaryColor,
+                      borderRadius: BorderRadius.circular(24.r),
+                    ),
+                    child: Icon(
+                      Icons.point_of_sale_outlined,
+                      color: Colors.white,
+                      size: 48.w,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 12.h),
               Text(
-                'PDV Loja Fácil',
+                'VendaPro',
                 style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                  color: AppTheme.primaryColor,
                   fontWeight: FontWeight.bold,
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 48.h),
-              OptionCardWidget(
-                context: context,
-                title: 'Venda',
-                icon: Icons.shopping_cart,
-                onTap: () => Navigator.pushNamed(context, Routes.seller),
+              Text(
+                'Sistema de Vendas',
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
+                textAlign: TextAlign.center,
               ),
-              SizedBox(height: 24.h),
-              OptionCardWidget(
-                context: context,
+              SizedBox(height: 54.h),
+              MainButton(
+                title: 'Iniciar Venda',
+                subtitle: 'Realizar nova transação',
+                icon: Icons.shopping_cart_outlined,
+                onTap: () => Navigator.pushNamed(context, Routes.seller),
+                isPrimary: true,
+              ),
+              SizedBox(height: 16.h),
+              MainButton(
                 title: 'Administrador',
-                icon: Icons.admin_panel_settings,
+                subtitle: 'Gerenciar vendas',
+                icon: Icons.admin_panel_settings_rounded,
                 onTap: () {},
               ),
             ],
