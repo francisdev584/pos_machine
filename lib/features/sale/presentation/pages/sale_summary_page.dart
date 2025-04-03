@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import 'package:pos_machine/core/navigation/routes.dart';
+import 'package:pos_machine/features/sale/domain/entities/sale.dart';
 import 'package:pos_machine/features/sale/presentation/widgets/payment_method_button.dart';
 import 'package:pos_machine/features/sale/presentation/widgets/sale_summary_item.dart';
 import 'package:pos_machine/features/sale/service/cubit/sale_cubit.dart';
 
 class SaleSummaryPage extends StatelessWidget {
-  const SaleSummaryPage({super.key});
+  final Sale sale;
+  const SaleSummaryPage({super.key, required this.sale});
 
   @override
   Widget build(BuildContext context) {
@@ -51,9 +54,9 @@ class SaleSummaryPage extends StatelessWidget {
                 Expanded(
                   child: ListView.builder(
                     padding: EdgeInsets.all(16.w),
-                    itemCount: state.selectedProducts.length,
+                    itemCount: state.sale.products.length,
                     itemBuilder: (context, index) {
-                      final product = state.selectedProducts[index];
+                      final product = state.sale.products[index];
                       return SaleSummaryItem(product: product);
                     },
                   ),
@@ -77,7 +80,14 @@ class SaleSummaryPage extends StatelessWidget {
                               label: 'Dinheiro',
                               isEnabled: true,
                               onTap: () {
-                                // Navigator.pushNamed(context, Routes.cashPayment);
+                                Navigator.pushNamed(
+                                  context,
+                                  Routes.cashPayment,
+                                  arguments: {
+                                    "total": state.total,
+                                    "sale": sale,
+                                  },
+                                );
                               },
                             ),
                           ),
