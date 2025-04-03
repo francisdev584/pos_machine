@@ -68,7 +68,7 @@ class HomePage extends StatelessWidget {
                 title: 'Administrador',
                 subtitle: 'Gerenciar vendas',
                 icon: Icons.admin_panel_settings_rounded,
-                onTap: () {},
+                onTap: () => Navigator.pushNamed(context, Routes.adminLogin),
               ),
             ],
           ),

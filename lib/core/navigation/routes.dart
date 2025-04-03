@@ -14,6 +14,7 @@ class Routes {
   static const String product = '/product';
   static const String sale = '/sale';
   static const String cashPayment = '/cashPayment';
+  static const String adminLogin = '/admin-login';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -43,6 +44,9 @@ class Routes {
                         as Sale,
               ),
         );
+      case adminLogin:
+        return MaterialPageRoute(builder: (context) => const AdminLoginPage());
+
       default:
         return MaterialPageRoute(
           builder:
