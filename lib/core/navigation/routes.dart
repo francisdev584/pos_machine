@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:pos_machine/features/auth/presentation/pages/admin_home_page.dart';
+import 'package:pos_machine/features/auth/presentation/pages/admin_login_page.dart';
 import 'package:pos_machine/features/home/presentation/pages/home_page.dart';
 import 'package:pos_machine/features/product/presentation/pages/product_page.dart';
 import 'package:pos_machine/features/sale/domain/entities/sale.dart';
@@ -15,6 +17,7 @@ class Routes {
   static const String sale = '/sale';
   static const String cashPayment = '/cashPayment';
   static const String adminLogin = '/admin-login';
+  static const String adminHome = '/admin-Home';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -46,6 +49,8 @@ class Routes {
         );
       case adminLogin:
         return MaterialPageRoute(builder: (context) => const AdminLoginPage());
+      case adminHome:
+        return MaterialPageRoute(builder: (context) => const AdminHomePage());
 
       default:
         return MaterialPageRoute(
