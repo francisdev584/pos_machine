@@ -5,6 +5,7 @@ import 'package:pos_machine/features/auth/presentation/pages/admin_login_page.da
 import 'package:pos_machine/features/home/presentation/pages/home_page.dart';
 import 'package:pos_machine/features/product/presentation/pages/product_page.dart';
 import 'package:pos_machine/features/sale/domain/entities/sale.dart';
+import 'package:pos_machine/features/sale/presentation/pages/admin_sale_page.dart';
 import 'package:pos_machine/features/sale/presentation/pages/cash_payment_page.dart';
 import 'package:pos_machine/features/sale/presentation/pages/sale_summary_page.dart';
 import 'package:pos_machine/features/seller/domain/entities/seller.dart';
@@ -18,6 +19,7 @@ class Routes {
   static const String cashPayment = '/cashPayment';
   static const String adminLogin = '/admin-login';
   static const String adminHome = '/admin-Home';
+  static const String adminSales = '/admin-sales';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -51,6 +53,8 @@ class Routes {
         return MaterialPageRoute(builder: (context) => const AdminLoginPage());
       case adminHome:
         return MaterialPageRoute(builder: (context) => const AdminHomePage());
+      case adminSales:
+        return MaterialPageRoute(builder: (context) => const AdminSalePage());
 
       default:
         return MaterialPageRoute(
