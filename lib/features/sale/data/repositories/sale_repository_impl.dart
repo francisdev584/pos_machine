@@ -9,21 +9,30 @@ class SaleRepositoryImpl implements SaleRepository {
   SaleRepositoryImpl(Dio dio) : _dio = dio;
 
   @override
-  Future<void> createSale(List<Product> products) async {
+  Future<void> createSale(int userId, List<Product> products) async {
     try {
       final response = await _dio.post(
         '/carts',
         data: {
-          'userId': 1,
+          'userId': userId,
           'date': DateTime.now().toIso8601String(),
           'products':
               products
-                  .map((product) => {'productId': product.id, 'quantity': 1})
+                  .map(
+                    (product) => {
+                      'id': product.id,
+                      'title': product.title,
+                      'price': product.price,
+                      'description': product.description,
+                      'category': product.category,
+                      'image': product.image,
+                    },
+                  )
                   .toList(),
         },
       );
 
-      if (response.statusCode != 201) {
+      if (response.statusCode != 200) {
         throw Exception('Falha ao criar venda');
       }
     } catch (e) {
