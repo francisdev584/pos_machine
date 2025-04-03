@@ -20,12 +20,7 @@ class Routes {
       case home:
         return MaterialPageRoute(builder: (context) => HomePage());
       case seller:
-        return settings.arguments != null
-            ? MaterialPageRoute(
-              builder:
-                  (context) => SellerPage(refresh: settings.arguments as bool),
-            )
-            : MaterialPageRoute(builder: (context) => SellerPage());
+        return MaterialPageRoute(builder: (context) => SellerPage());
       case product:
         return MaterialPageRoute(
           builder:
