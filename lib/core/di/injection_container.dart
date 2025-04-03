@@ -1,9 +1,15 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:pos_machine/core/config/env_config.dart';
 import 'package:pos_machine/core/services/cache_service.dart';
+import 'package:pos_machine/core/services/interfaces/secure_storage_interface.dart';
+import 'package:pos_machine/core/services/secure_storage_service.dart';
+import 'package:pos_machine/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:pos_machine/features/auth/domain/repositories/auth_repository.dart';
+import 'package:pos_machine/features/auth/service/cubit/auth_cubit.dart';
 import 'package:pos_machine/features/product/data/repositories/product_repository_impl.dart';
 import 'package:pos_machine/features/product/domain/repositories/product_repository.dart';
 import 'package:pos_machine/features/product/service/cubit/product_cubit.dart';
@@ -23,9 +29,13 @@ Future<void> init() async {
   );
   final sharedPreferences = await SharedPreferences.getInstance();
   getIt.registerLazySingleton(() => sharedPreferences);
+  getIt.registerLazySingleton(() => const FlutterSecureStorage());
 
   // Services
   getIt.registerLazySingleton<CacheService>(() => CacheService(getIt()));
+  getIt.registerLazySingleton<SecureStorage>(
+    () => SecureStorageService(getIt()),
+  );
 
   // Repositories
   getIt.registerLazySingleton<SellerRepository>(
@@ -37,9 +47,13 @@ Future<void> init() async {
   getIt.registerLazySingleton<SaleRepository>(
     () => SaleRepositoryImpl(getIt()),
   );
+  getIt.registerLazySingleton<AuthRepository>(
+    () => AuthRepositoryImpl(getIt(), getIt()),
+  );
 
   // Cubits
   getIt.registerFactory(() => SellerCubit(repository: getIt()));
   getIt.registerFactory(() => ProductCubit(repository: getIt()));
   getIt.registerFactory(() => SaleCubit(repository: getIt()));
+  getIt.registerFactory(() => AuthCubit(repository: getIt()));
 }
