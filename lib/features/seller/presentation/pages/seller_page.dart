@@ -102,7 +102,12 @@ class SellerPage extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.all(24.w),
                 child: ElevatedButton(
-                  onPressed: () => Navigator.pushNamed(context, Routes.product),
+                  onPressed:
+                      () => Navigator.pushNamed(
+                        context,
+                        Routes.product,
+                        arguments: state.selectedSeller,
+                      ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.primaryColor,
                     padding: EdgeInsets.symmetric(vertical: 16.h),
