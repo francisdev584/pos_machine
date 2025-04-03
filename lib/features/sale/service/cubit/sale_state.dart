@@ -1,7 +1,7 @@
 part of 'sale_cubit.dart';
 
 abstract class SaleState extends Equatable {
-  const SaleState();
+  const SaleState({key});
 
   @override
   List<Object?> get props => [];
@@ -10,20 +10,16 @@ abstract class SaleState extends Equatable {
 class SaleInitial extends SaleState {}
 
 class SaleLoaded extends SaleState {
-  final List<Product> selectedProducts;
-  final Map<Product, int> quantities;
+  final Sale sale;
 
-  const SaleLoaded({required this.selectedProducts, required this.quantities});
+  const SaleLoaded({required this.sale});
 
   double get total {
-    return selectedProducts.fold(
-      0,
-      (sum, product) => sum + (product.price * (quantities[product] ?? 1)),
-    );
+    return sale.products.fold(0, (sum, product) => sum + (product.price * 1));
   }
 
   @override
-  List<Object?> get props => [selectedProducts, quantities];
+  List<Object?> get props => [sale];
 }
 
 class SaleSuccess extends SaleState {}
