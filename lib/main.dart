@@ -7,6 +7,7 @@ import 'package:pos_machine/core/config/env_config.dart';
 import 'package:pos_machine/core/di/injection_container.dart' as di;
 import 'package:pos_machine/core/navigation/routes.dart';
 import 'package:pos_machine/core/theme/app_theme.dart';
+import 'package:pos_machine/features/auth/service/cubit/auth_cubit.dart';
 import 'package:pos_machine/features/product/service/cubit/product_cubit.dart';
 import 'package:pos_machine/features/sale/service/cubit/sale_cubit.dart';
 import 'package:pos_machine/features/seller/service/cubit/seller_cubit.dart';
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => di.getIt<SellerCubit>()),
         BlocProvider(create: (context) => di.getIt<ProductCubit>()),
         BlocProvider(create: (context) => di.getIt<SaleCubit>()),
+        BlocProvider(create: (context) => di.getIt<AuthCubit>()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(375, 812),
