@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -7,6 +9,8 @@ import 'package:pos_machine/features/sale/domain/repositories/sale_repository.da
 part 'sale_state.dart';
 
 class SaleCubit extends Cubit<SaleState> {
+  static const int maxProducts = 10;
+
   final SaleRepository _repository;
   final List<Product> _selectedProducts = [];
   final Map<Product, int> _quantities = {};
@@ -15,11 +19,22 @@ class SaleCubit extends Cubit<SaleState> {
     : _repository = repository,
       super(SaleInitial());
 
-  void toggleProduct(Product product) {
+  void toggleProduct(Product product, {BuildContext? context}) {
     if (_selectedProducts.contains(product)) {
       _selectedProducts.remove(product);
       _quantities.remove(product);
     } else {
+      if (_selectedProducts.length >= maxProducts) {
+        if (context != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Limite máximo de 10 produtos por venda atingido'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+        return;
+      }
       _selectedProducts.add(product);
       _quantities[product] = 1;
     }
