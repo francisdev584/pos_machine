@@ -43,4 +43,10 @@ class SellerCubit extends Cubit<SellerState> {
       emit(SellerLoaded(sellers: currentState.sellers, selectedSeller: seller));
     }
   }
+
+  Future<void> clearSelectedSeller() async {
+    final currentState = state as SellerLoaded;
+    await _repository.clearSelectedSeller();
+    emit(SellerLoaded(sellers: currentState.sellers));
+  }
 }
