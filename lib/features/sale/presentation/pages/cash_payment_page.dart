@@ -126,9 +126,6 @@ class _CashPaymentPageState extends State<CashPaymentPage> {
                     _change < 0
                         ? null
                         : () {
-                          final amountPaid = double.parse(
-                            _amountController.text,
-                          );
                           context.read<SaleCubit>().finalizeSale();
                         },
                 style: ElevatedButton.styleFrom(
