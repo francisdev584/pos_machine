@@ -1,51 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pos_machine/core/theme/app_theme.dart';
 import 'package:pos_machine/features/product/domain/entities/product.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:pos_machine/features/sale/service/cubit/sale_cubit.dart';
 
 class SaleSummaryItem extends StatelessWidget {
-  final Product product;
-  final VoidCallback onRemove;
+  const SaleSummaryItem({super.key, required this.product});
 
-  const SaleSummaryItem({
-    super.key,
-    required this.product,
-    required this.onRemove,
-  });
+  final Product product;
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.only(bottom: 16.h),
+    return Container(
+      margin: EdgeInsets.only(bottom: 12.h),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12.r),
+      ),
       child: Padding(
-        padding: EdgeInsets.all(16.w),
+        padding: EdgeInsets.all(12.w),
         child: Row(
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: CachedNetworkImage(
-                imageUrl: product.image,
-                width: 60.w,
-                height: 60.w,
+              borderRadius: BorderRadius.circular(8.r),
+              child: Image.network(
+                product.image,
+                width: 64.w,
+                height: 64.h,
                 fit: BoxFit.cover,
-                placeholder:
-                    (context, url) => Container(
-                      width: 60.w,
-                      height: 60.w,
-                      color: Colors.grey[200],
-                      child: const Center(child: CircularProgressIndicator()),
-                    ),
-                errorWidget:
-                    (context, url, error) => Container(
-                      width: 60.w,
-                      height: 60.w,
-                      color: Colors.grey[200],
-                      child: const Icon(Icons.error),
-                    ),
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    width: 64.w,
+                    height: 64.w,
+                    color: Colors.grey[200],
+                    child: const Icon(Icons.image_not_supported),
+                  );
+                },
               ),
             ),
-            SizedBox(width: 16.w),
+            SizedBox(width: 12.w),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,10 +47,15 @@ class SaleSummaryItem extends StatelessWidget {
                   Text(
                     product.title,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w500,
                     ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                  Text(
+                    'ID: ${product.id}',
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
                   ),
                   SizedBox(height: 4.h),
                   Text(
@@ -70,9 +69,10 @@ class SaleSummaryItem extends StatelessWidget {
               ),
             ),
             IconButton(
-              onPressed: onRemove,
-              icon: const Icon(Icons.remove_circle_outline),
-              color: AppTheme.errorColor,
+              icon: Icon(Icons.delete_outline, color: Colors.red[300]),
+              onPressed: () {
+                context.read<SaleCubit>().removeProduct(product);
+              },
             ),
           ],
         ),

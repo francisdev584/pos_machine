@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'package:pos_machine/core/theme/app_theme.dart';
+import 'package:pos_machine/features/sale/presentation/widgets/payment_method_button.dart';
 import 'package:pos_machine/features/sale/presentation/widgets/sale_summary_item.dart';
 import 'package:pos_machine/features/sale/service/cubit/sale_cubit.dart';
 
@@ -13,105 +13,99 @@ class SaleSummaryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Resumo da Venda')),
+      backgroundColor: Colors.grey[100],
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: const Text('Resumo da Venda'),
+      ),
       body: BlocBuilder<SaleCubit, SaleState>(
         builder: (context, state) {
           if (state is SaleLoaded) {
             return Column(
               children: [
+                Container(
+                  width: double.infinity,
+                  color: Colors.white,
+                  padding: EdgeInsets.symmetric(vertical: 24.h),
+                  child: Column(
+                    children: [
+                      Text(
+                        'Total da Venda',
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(color: Colors.grey[600]),
+                      ),
+                      SizedBox(height: 8.h),
+                      Text(
+                        'R\$ ${state.total.toStringAsFixed(2)}',
+                        style: Theme.of(context).textTheme.headlineMedium
+                            ?.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                ),
                 Expanded(
                   child: ListView.builder(
                     padding: EdgeInsets.all(16.w),
-                    itemCount: state.products.length,
+                    itemCount: state.selectedProducts.length,
                     itemBuilder: (context, index) {
-                      final product = state.products[index];
-                      return SaleSummaryItem(
-                        product: product,
-                        onRemove: () {
-                          context.read<SaleCubit>().removeProduct(product);
-                        },
-                      );
+                      final product = state.selectedProducts[index];
+                      return SaleSummaryItem(product: product);
                     },
                   ),
                 ),
                 Container(
                   padding: EdgeInsets.all(16.w),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(
-                          alpha: 26,
-                          red: 0,
-                          green: 0,
-                          blue: 0,
-                        ),
-                        blurRadius: 4,
-                        offset: const Offset(0, -2),
-                      ),
-                    ],
-                  ),
+                  color: Colors.white,
                   child: Column(
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Total',
-                            style: Theme.of(context).textTheme.titleLarge
-                                ?.copyWith(fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            'R\$ ${state.total.toStringAsFixed(2)}',
-                            style: Theme.of(
-                              context,
-                            ).textTheme.titleLarge?.copyWith(
-                              color: AppTheme.primaryColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
+                      Text(
+                        'Selecione a forma de pagamento',
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(color: Colors.grey[600]),
                       ),
-                      SizedBox(height: 16.h),
+                      SizedBox(height: 4.h),
                       Row(
                         children: [
                           Expanded(
-                            child: ElevatedButton.icon(
-                              onPressed: () {
-                                // TODO: Implementar pagamento em dinheiro
+                            child: PaymentMethodButton(
+                              icon: Icons.attach_money,
+                              label: 'Dinheiro',
+                              isEnabled: true,
+                              onTap: () {
+                                // Navigator.pushNamed(context, Routes.cashPayment);
                               },
-                              icon: const Icon(Icons.money),
-                              label: const Text('Dinheiro'),
                             ),
                           ),
-                          SizedBox(width: 8.w),
+                          SizedBox(width: 12.w),
                           Expanded(
-                            child: ElevatedButton.icon(
-                              onPressed: () {
-                                // TODO: Implementar pagamento com PIX
-                              },
-                              icon: const Icon(Icons.qr_code),
-                              label: const Text('PIX'),
+                            child: PaymentMethodButton(
+                              icon: Icons.qr_code,
+                              label: 'Pix',
+                              isEnabled: false,
+                              onTap: () {},
                             ),
                           ),
-                          SizedBox(width: 8.w),
+                          SizedBox(width: 12.w),
                           Expanded(
-                            child: ElevatedButton.icon(
-                              onPressed: () {
-                                // TODO: Implementar pagamento com cartão de crédito
-                              },
-                              icon: const Icon(Icons.credit_card),
-                              label: const Text('Crédito'),
+                            child: PaymentMethodButton(
+                              icon: Icons.credit_card,
+                              label: 'Crédito',
+                              isEnabled: false,
+                              onTap: () {},
                             ),
                           ),
-                          SizedBox(width: 8.w),
+                          SizedBox(width: 12.w),
                           Expanded(
-                            child: ElevatedButton.icon(
-                              onPressed: () {
-                                // TODO: Implementar pagamento com cartão de débito
-                              },
-                              icon: const Icon(Icons.credit_card),
-                              label: const Text('Débito'),
+                            child: PaymentMethodButton(
+                              icon: Icons.credit_card,
+                              label: 'Débito',
+                              isEnabled: false,
+                              onTap: () {},
                             ),
                           ),
                         ],
@@ -122,7 +116,6 @@ class SaleSummaryPage extends StatelessWidget {
               ],
             );
           }
-
           return const Center(child: CircularProgressIndicator());
         },
       ),
