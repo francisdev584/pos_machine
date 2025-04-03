@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import 'package:pos_machine/core/config/env_config.dart';
 import 'package:pos_machine/core/navigation/routes.dart';
 import 'package:pos_machine/core/theme/app_theme.dart';
 import 'package:pos_machine/features/home/presentation/widget/main_button.dart';
@@ -41,7 +42,7 @@ class HomePage extends StatelessWidget {
               ),
               SizedBox(height: 12.h),
               Text(
-                'VendaPro',
+                EnvConfig.appName,
                 style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
