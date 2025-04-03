@@ -82,12 +82,7 @@ class AdminHomePage extends StatelessWidget {
                   title: 'Cancelar Vendas',
                   subtitle: 'Gerenciar vendas realizadas',
                   icon: Icons.cancel_outlined,
-                  onTap: () {},
-                  // () => Navigator.pushNamedAndRemoveUntil(
-                  //   context,
-                  //   Routes.saleCancellation,
-                  //   (route) => false,
-                  // ),
+                  onTap: () => Navigator.pushNamed(context, Routes.adminSales),
                   isPrimary: true,
                 ),
               ],
