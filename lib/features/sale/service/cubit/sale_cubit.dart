@@ -11,10 +11,11 @@ import 'package:pos_machine/features/seller/domain/entities/seller.dart';
 part 'sale_state.dart';
 
 class SaleCubit extends Cubit<SaleState> {
-  static const int maxProducts = 10;
-
   final SaleRepository _repository;
   Sale sale = Sale(userId: 0, products: []);
+
+  static const int maxProducts = 10;
+  static const int minProducts = 1;
 
   SaleCubit({required SaleRepository repository})
     : _repository = repository,
@@ -24,20 +25,10 @@ class SaleCubit extends Cubit<SaleState> {
     if (sale.userId == 0) {
       sale = sale.copyWith(userId: seller.id);
     }
+
     if (sale.products.contains(product)) {
       sale.products.remove(product);
     } else {
-      if (sale.products.length >= maxProducts) {
-        if (context != null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Limite máximo de 10 produtos por venda atingido'),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
-        return;
-      }
       sale.products.add(product);
     }
     emit(SaleLoaded(sale: sale.copyWith(products: List.from(sale.products))));
@@ -54,9 +45,21 @@ class SaleCubit extends Cubit<SaleState> {
     emit(SaleInitial());
   }
 
+  void canProceedToPayment() {
+    sale.products.length < minProducts
+        ? emit(
+          SaleCanNotProceedToPaymentError(
+            'Selecione pelo menos $minProducts produto para continuar',
+          ),
+        )
+        : emit(SaleCanProceedToPayment(sale: sale));
+    emit(SaleLoaded(sale: sale.copyWith(products: List.from(sale.products))));
+  }
+
   Future<void> finalizeSale() async {
     if (state is SaleLoaded) {
       try {
+        emit(SaleProcessing());
         await _repository.createSale(sale.userId, sale.products);
         clearCart();
         emit(SaleSuccess());

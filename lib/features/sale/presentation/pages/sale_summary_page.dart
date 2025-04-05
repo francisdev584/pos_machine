@@ -74,12 +74,9 @@ class SaleSummaryPage extends StatelessWidget {
                       SizedBox(height: 4.h),
                       Row(
                         children: [
-                          Expanded(
-                            child: PaymentMethodButton(
-                              icon: Icons.attach_money,
-                              label: 'Dinheiro',
-                              isEnabled: true,
-                              onTap: () {
+                          BlocListener<SaleCubit, SaleState>(
+                            listener: (context, state) {
+                              if (state is SaleCanProceedToPayment) {
                                 Navigator.pushNamed(
                                   context,
                                   Routes.cashPayment,
@@ -88,7 +85,51 @@ class SaleSummaryPage extends StatelessWidget {
                                     "sale": sale,
                                   },
                                 );
-                              },
+                              }
+                              if (state is SaleCanNotProceedToPaymentError) {
+                                ScaffoldMessenger.of(
+                                  context,
+                                ).hideCurrentSnackBar();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.info_outline,
+                                          color: Colors.white,
+                                        ),
+                                        SizedBox(width: 8),
+                                        Expanded(
+                                          child: Text(
+                                            state.message,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    backgroundColor: Colors.amber.shade700,
+                                    duration: Duration(seconds: 3),
+                                    behavior: SnackBarBehavior.floating,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
+                            child: Expanded(
+                              child: PaymentMethodButton(
+                                icon: Icons.attach_money,
+                                label: 'Dinheiro',
+                                isEnabled: true,
+                                onTap: () {
+                                  context
+                                      .read<SaleCubit>()
+                                      .canProceedToPayment();
+                                },
+                              ),
                             ),
                           ),
                           SizedBox(width: 12.w),

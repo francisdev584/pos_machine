@@ -57,25 +57,103 @@ class ProductPage extends StatelessWidget {
                 Container(
                   color: Colors.white,
                   padding: EdgeInsets.all(16.w),
-                  child: TextField(
-                    onChanged: (query) {
-                      context.read<ProductCubit>().searchProducts(query);
-                    },
-                    decoration: InputDecoration(
-                      hintText: 'Buscar produto por nome ou ID',
-                      hintStyle: TextStyle(color: Colors.grey[400]),
-                      prefixIcon: Icon(Icons.search, color: Colors.grey[400]),
-                      filled: true,
-                      fillColor: Colors.grey[100],
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12.r),
-                        borderSide: BorderSide.none,
+                  child: Column(
+                    children: [
+                      TextField(
+                        onChanged: (query) {
+                          context.read<ProductCubit>().searchProducts(query);
+                        },
+                        decoration: InputDecoration(
+                          hintText: 'Buscar produto por nome ou ID',
+                          hintStyle: TextStyle(color: Colors.grey[400]),
+                          prefixIcon: Icon(
+                            Icons.search,
+                            color: Colors.grey[400],
+                          ),
+                          filled: true,
+                          fillColor: Colors.grey[100],
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                            borderSide: BorderSide.none,
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 16.w,
+                            vertical: 12.h,
+                          ),
+                        ),
                       ),
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: 16.w,
-                        vertical: 12.h,
+                      SizedBox(height: 12.h),
+                      // Contador de produtos
+                      BlocBuilder<SaleCubit, SaleState>(
+                        builder: (context, saleState) {
+                          if (saleState is SaleLoaded) {
+                            final itemCount = saleState.sale.products.length;
+                            final maxProducts = SaleCubit.maxProducts;
+                            final isNearLimit = itemCount >= maxProducts * 0.7;
+                            final isAtLimit = itemCount >= maxProducts;
+
+                            return Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 12.w,
+                                vertical: 8.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color:
+                                    isAtLimit
+                                        ? Colors.red.shade50
+                                        : isNearLimit
+                                        ? Colors.amber.shade50
+                                        : Colors.green.shade50,
+                                borderRadius: BorderRadius.circular(8.r),
+                                border: Border.all(
+                                  color:
+                                      isAtLimit
+                                          ? Colors.red.shade300
+                                          : isNearLimit
+                                          ? Colors.amber.shade300
+                                          : Colors.green.shade300,
+                                  width: 1.5,
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    isAtLimit
+                                        ? Icons.error_outline
+                                        : isNearLimit
+                                        ? Icons.warning_amber_outlined
+                                        : Icons.check_circle_outline,
+                                    color:
+                                        isAtLimit
+                                            ? Colors.red
+                                            : isNearLimit
+                                            ? Colors.amber.shade700
+                                            : Colors.green,
+                                    size: 20.w,
+                                  ),
+                                  SizedBox(width: 8.w),
+                                  Expanded(
+                                    child: Text(
+                                      'Produtos selecionados: $itemCount/$maxProducts',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        color:
+                                            isAtLimit
+                                                ? Colors.red
+                                                : isNearLimit
+                                                ? Colors.amber.shade700
+                                                : Colors.green,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                          return const SizedBox.shrink();
+                        },
                       ),
-                    ),
+                    ],
                   ),
                 ),
                 Expanded(
@@ -89,10 +167,18 @@ class ProductPage extends StatelessWidget {
                           final isSelected =
                               saleState is SaleLoaded &&
                               saleState.sale.products.contains(product);
+
+                          // Verificar se atingiu o limite de produtos
+                          final isAtMaxLimit =
+                              saleState is SaleLoaded &&
+                              saleState.sale.products.length >=
+                                  SaleCubit.maxProducts;
+
                           return ProductListItem(
                             key: ValueKey(product.id),
                             product: product,
                             isSelected: isSelected,
+                            isDisabled: !isSelected && isAtMaxLimit,
                             onTap: () {
                               context.read<SaleCubit>().toggleProduct(
                                 seller,
@@ -121,14 +207,9 @@ class ProductPage extends StatelessWidget {
                 color: Colors.white,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(
-                      alpha: 26,
-                      red: 0,
-                      green: 0,
-                      blue: 0,
-                    ),
-                    blurRadius: 0,
-                    offset: const Offset(0, -0.5),
+                    color: Colors.black.withAlpha(26),
+                    blurRadius: 4,
+                    offset: const Offset(0, -2),
                   ),
                 ],
               ),
@@ -156,12 +237,13 @@ class ProductPage extends StatelessWidget {
                   SizedBox(width: 16.w),
                   Expanded(
                     child: ElevatedButton(
-                      onPressed:
-                          () => Navigator.pushNamed(
-                            context,
-                            Routes.sale,
-                            arguments: state.sale,
-                          ),
+                      onPressed: () {
+                        Navigator.pushNamed(
+                          context,
+                          Routes.sale,
+                          arguments: state.sale,
+                        );
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppTheme.primaryColor,
                         padding: EdgeInsets.symmetric(vertical: 16.h),
