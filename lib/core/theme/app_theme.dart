@@ -11,6 +11,7 @@ class AppTheme {
   static const Color errorColor = Color(0xFFD32F2F);
   static const Color textColor = Color(0xFF212121);
   static const Color textSecondaryColor = Color(0xFF757575);
+  static const Color successColor = Color(0xFF388E3C);
 
   static ThemeData get lightTheme {
     return ThemeData(
