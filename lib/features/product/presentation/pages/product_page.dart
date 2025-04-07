@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pos_machine/core/navigation/routes.dart';
 import 'package:pos_machine/core/theme/app_theme.dart';
 import 'package:pos_machine/features/product/presentation/widgets/product_list_item.dart';
+import 'package:pos_machine/features/product/presentation/widgets/product_loading_shimmer.dart';
 import 'package:pos_machine/features/product/service/cubit/product_cubit.dart';
 import 'package:pos_machine/features/sale/service/cubit/sale_cubit.dart';
 import 'package:pos_machine/features/seller/domain/entities/seller.dart';
@@ -30,7 +31,7 @@ class ProductPage extends StatelessWidget {
       body: BlocBuilder<ProductCubit, ProductState>(
         builder: (context, state) {
           if (state is ProductLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const ProductLoadingShimmer();
           } else if (state is ProductError) {
             return Center(
               child: Column(
