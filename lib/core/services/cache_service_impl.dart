@@ -5,7 +5,6 @@ import 'package:pos_machine/core/services/interfaces/cache_service.dart';
 class CacheServiceImpl implements CacheService {
   static const String _selectedSellerKey = 'selected_seller';
   static const String _selectedProductsKey = 'selected_products';
-  static const String _expirationPrefix = 'exp_';
 
   final SharedPreferences _prefs;
 

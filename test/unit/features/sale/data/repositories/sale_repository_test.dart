@@ -1,6 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:dio/dio.dart';
+
 import 'package:pos_machine/features/product/domain/entities/product.dart';
 import 'package:pos_machine/features/sale/data/repositories/sale_repository_impl.dart';
 import 'package:pos_machine/features/sale/domain/entities/sale.dart';
@@ -48,8 +49,6 @@ void main() {
         ratingCount: 15,
       ),
     ];
-
-    final testSale = Sale(id: 1, userId: 1, products: testProducts);
 
     final testSales = [
       {
