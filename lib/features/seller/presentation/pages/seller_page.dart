@@ -21,7 +21,7 @@ class SellerPage extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Navigator.pushReplacementNamed(context, Routes.home),
         ),
         title: const Text('Selecione o Vendedor'),
       ),
