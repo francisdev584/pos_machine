@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pos_machine/core/config/env_config.dart';
 import 'package:pos_machine/core/services/cache_service.dart';
 import 'package:pos_machine/core/services/interfaces/secure_storage_interface.dart';
+import 'package:pos_machine/core/services/network/dio_interceptors.dart';
 import 'package:pos_machine/core/services/secure_storage_service.dart';
 import 'package:pos_machine/features/admin/service/cubit/admin_sale_cubit.dart';
 import 'package:pos_machine/features/auth/data/repositories/auth_repository_impl.dart';
@@ -25,9 +26,16 @@ final GetIt getIt = GetIt.instance;
 
 Future<void> init() async {
   // External
-  getIt.registerLazySingleton(
-    () => Dio(BaseOptions(baseUrl: EnvConfig.apiUrl)),
+  final dio = Dio(
+    BaseOptions(
+      baseUrl: EnvConfig.apiUrl,
+      connectTimeout: Duration(milliseconds: EnvConfig.apiTimeout),
+      receiveTimeout: Duration(milliseconds: EnvConfig.apiTimeout),
+      sendTimeout: Duration(milliseconds: EnvConfig.apiTimeout),
+    ),
   );
+
+  getIt.registerLazySingleton(() => dio);
   final sharedPreferences = await SharedPreferences.getInstance();
   getIt.registerLazySingleton(() => sharedPreferences);
   getIt.registerLazySingleton(() => const FlutterSecureStorage());
@@ -51,6 +59,11 @@ Future<void> init() async {
   getIt.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(getIt(), getIt()),
   );
+
+  // Configurar Dio com interceptadores
+  dio.interceptors.add(ErrorInterceptor());
+  dio.interceptors.add(RetryInterceptor(dio: getIt()));
+  dio.interceptors.add(AuthInterceptor(getIt()));
 
   // Cubits
   getIt.registerFactory(() => SellerCubit(repository: getIt()));
