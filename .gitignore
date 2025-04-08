@@ -53,3 +53,6 @@ app.*.map.json
 # Configuration files
 config/development.json
 config/production.json
+
+# Coverage test
+coverage/lcov.info
