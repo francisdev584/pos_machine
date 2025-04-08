@@ -61,7 +61,6 @@ class _QuickAmountButton extends StatefulWidget {
   final VoidCallback onTap;
 
   const _QuickAmountButton({
-    super.key,
     required this.amount,
     required this.onTap,
     this.isSelected = false,

@@ -75,7 +75,9 @@ class _CashPaymentPageState extends State<CashPaymentPage>
   void _finalizeSale() {
     _startProcessingAnimation();
     Future.delayed(const Duration(milliseconds: 800), () {
-      context.read<SaleCubit>().finalizeSale();
+      if (mounted) {
+        context.read<SaleCubit>().finalizeSale();
+      }
     });
   }
 
@@ -112,6 +114,7 @@ class _CashPaymentPageState extends State<CashPaymentPage>
       },
       child: Scaffold(
         backgroundColor: Colors.white,
+        resizeToAvoidBottomInset: true,
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
@@ -122,145 +125,162 @@ class _CashPaymentPageState extends State<CashPaymentPage>
           ),
           title: const Text('Pagamento em Dinheiro'),
         ),
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Total da venda
-              Column(
+        body: SingleChildScrollView(
+          physics: const ClampingScrollPhysics(),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            child: SizedBox(
+              height:
+                  MediaQuery.of(context).size.height -
+                  AppBar().preferredSize.height -
+                  MediaQuery.of(context).padding.top,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(
-                    'Valor Total',
-                    style: TextStyle(fontSize: 14.sp, color: Colors.grey[600]),
-                  ),
-                  SizedBox(height: 8.h),
-                  Text(
-                    FormatUtils.formatCurrencyWithSymbol(widget.total),
-                    style: TextStyle(
-                      fontSize: 28.sp,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                ],
-              ),
-
-              SizedBox(height: 24.h),
-
-              // Valor Recebido
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Valor Recebido',
-                    style: TextStyle(fontSize: 14.sp, color: Colors.grey[600]),
-                  ),
-                  SizedBox(height: 8.h),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8.r),
-                      border: Border.all(color: Colors.grey.shade300),
-                    ),
-                    child: TextField(
-                      controller: _amountController,
-                      keyboardType: const TextInputType.numberWithOptions(
-                        decimal: true,
-                      ),
-                      style: TextStyle(
-                        fontSize: 20.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(
-                          vertical: 16.h,
-                          horizontal: 12.w,
+                  SizedBox(height: 20.h),
+                  // Total da venda
+                  Column(
+                    children: [
+                      Text(
+                        'Valor Total',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: Colors.grey[600],
                         ),
-                        hintText: '0,00',
-                        hintStyle: TextStyle(
-                          color: Colors.grey[400],
-                          fontSize: 20.sp,
-                        ),
-                        prefixText: 'R\$ ',
-                        prefixStyle: TextStyle(
-                          fontSize: 20.sp,
+                      ),
+                      SizedBox(height: 8.h),
+                      Text(
+                        FormatUtils.formatCurrencyWithSymbol(widget.total),
+                        style: TextStyle(
+                          fontSize: 28.sp,
                           fontWeight: FontWeight.bold,
+                          color: Colors.black,
                         ),
-                        border: InputBorder.none,
                       ),
-                      onChanged: (value) {
-                        // Converter entrada com vírgula para processamento com ponto
-                        final processValue = value.replaceAll(',', '.');
-                        _updateAmount(processValue);
-                      },
-                    ),
+                    ],
                   ),
-                ],
-              ),
-              SizedBox(height: 24.h),
-              AnimatedChangeDisplay(change: _change),
-              // Botões de valores rápidos
-              QuickAmountButtons(
-                totalAmount: widget.total,
-                onAmountSelected: _setAmountPaid,
-              ),
 
-              const Spacer(),
+                  SizedBox(height: 24.h),
 
-              // Botão finalizar pagamento
-              Padding(
-                padding: EdgeInsets.only(bottom: 24.h),
-                child: SizedBox(
-                  height: 48.h,
-                  child: ElevatedButton(
-                    onPressed:
-                        _isProcessing || _change < 0 ? null : _finalizeSale,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF00C853),
-                      foregroundColor: Colors.white,
-                      disabledBackgroundColor: Colors.grey.shade400,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.r),
+                  // Valor Recebido
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Valor Recebido',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: Colors.grey[600],
+                        ),
                       ),
-                    ),
-                    child:
-                        _isProcessing
-                            ? Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                  width: 20.w,
-                                  height: 20.w,
-                                  child: const CircularProgressIndicator(
-                                    strokeWidth: 2.5,
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.white,
+                      SizedBox(height: 8.h),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8.r),
+                          border: Border.all(color: Colors.grey.shade300),
+                        ),
+                        child: TextField(
+                          controller: _amountController,
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
+                          style: TextStyle(
+                            fontSize: 20.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(
+                              vertical: 16.h,
+                              horizontal: 12.w,
+                            ),
+                            hintText: '0,00',
+                            hintStyle: TextStyle(
+                              color: Colors.grey[400],
+                              fontSize: 20.sp,
+                            ),
+                            prefixText: 'R\$ ',
+                            prefixStyle: TextStyle(
+                              fontSize: 20.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            border: InputBorder.none,
+                          ),
+                          onChanged: (value) {
+                            // Converter entrada com vírgula para processamento com ponto
+                            final processValue = value.replaceAll(',', '.');
+                            _updateAmount(processValue);
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 24.h),
+                  AnimatedChangeDisplay(change: _change),
+                  // Botões de valores rápidos
+                  QuickAmountButtons(
+                    totalAmount: widget.total,
+                    onAmountSelected: _setAmountPaid,
+                  ),
+
+                  const Expanded(child: SizedBox()),
+
+                  // Botão finalizar pagamento
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 24.h),
+                    child: SizedBox(
+                      height: 48.h,
+                      child: ElevatedButton(
+                        onPressed:
+                            _isProcessing || _change < 0 ? null : _finalizeSale,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF00C853),
+                          foregroundColor: Colors.white,
+                          disabledBackgroundColor: Colors.grey.shade400,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.r),
+                          ),
+                        ),
+                        child:
+                            _isProcessing
+                                ? Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      width: 20.w,
+                                      height: 20.w,
+                                      child: const CircularProgressIndicator(
+                                        strokeWidth: 2.5,
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                              Colors.white,
+                                            ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                                SizedBox(width: 12.w),
-                                Text(
-                                  'Processando...',
+                                    SizedBox(width: 12.w),
+                                    Text(
+                                      'Processando...',
+                                      style: TextStyle(
+                                        fontSize: 16.sp,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                                : Text(
+                                  'Finalizar Pagamento',
                                   style: TextStyle(
                                     fontSize: 16.sp,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                              ],
-                            )
-                            : Text(
-                              'Finalizar Pagamento',
-                              style: TextStyle(
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),
