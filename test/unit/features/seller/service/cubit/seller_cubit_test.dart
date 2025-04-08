@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:bloc_test/bloc_test.dart';
+
 import 'package:pos_machine/features/seller/domain/entities/seller.dart';
 import 'package:pos_machine/features/seller/domain/repositories/seller_repository.dart';
 import 'package:pos_machine/features/seller/service/cubit/seller_cubit.dart';
