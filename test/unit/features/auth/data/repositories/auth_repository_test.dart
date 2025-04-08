@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:pos_machine/core/services/interfaces/secure_storage_interface.dart';
+import 'package:pos_machine/core/services/interfaces/secure_storage.dart';
 import 'package:pos_machine/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:pos_machine/features/auth/domain/entities/auth_credentials.dart';
 
