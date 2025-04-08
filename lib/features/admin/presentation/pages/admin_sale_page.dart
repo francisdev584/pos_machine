@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:pos_machine/core/theme/app_theme.dart';
+import 'package:pos_machine/core/utils/ui_error_helper.dart';
 import 'package:pos_machine/features/admin/service/cubit/admin_sale_cubit.dart';
 
 class AdminSalePage extends StatefulWidget {
@@ -32,17 +33,35 @@ class _AdminSalePageState extends State<AdminSalePage> {
       body: BlocConsumer<AdminSaleCubit, AdminSaleState>(
         listener: (context, state) {
           if (state is AdminSaleError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: Colors.red,
-              ),
-            );
+            UIErrorHelper.showErrorSnackBar(context, state.message);
           }
         },
         builder: (context, state) {
           if (state is AdminSaleLoading) {
             return const Center(child: CircularProgressIndicator());
+          }
+
+          if (state is AdminSaleError) {
+            final isNetworkError =
+                state.message.contains('conexão') ||
+                state.message.contains('internet') ||
+                state.message.contains('servidor');
+
+            if (isNetworkError) {
+              return NetworkErrorWidget(
+                message: state.message,
+                onRetry: () {
+                  context.read<AdminSaleCubit>().loadSales();
+                },
+              );
+            } else {
+              return AppErrorWidget(
+                message: state.message,
+                onRetry: () {
+                  context.read<AdminSaleCubit>().loadSales();
+                },
+              );
+            }
           }
 
           if (state is AdminSaleLoaded) {

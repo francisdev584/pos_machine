@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:pos_machine/core/navigation/routes.dart';
 import 'package:pos_machine/core/theme/app_theme.dart';
+import 'package:pos_machine/core/utils/ui_error_helper.dart';
 import 'package:pos_machine/features/seller/presentation/widgets/seller_list_item.dart';
 import 'package:pos_machine/features/seller/service/cubit/seller_cubit.dart';
 
@@ -29,25 +30,26 @@ class SellerPage extends StatelessWidget {
           if (state is SellerLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is SellerError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    state.message,
-                    style: TextStyle(color: AppTheme.errorColor),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 16.h),
-                  ElevatedButton(
-                    onPressed: () {
-                      context.read<SellerCubit>().loadSellers();
-                    },
-                    child: const Text('Tentar Novamente'),
-                  ),
-                ],
-              ),
-            );
+            final isNetworkError =
+                state.message.contains('conexão') ||
+                state.message.contains('internet') ||
+                state.message.contains('servidor');
+
+            if (isNetworkError) {
+              return NetworkErrorWidget(
+                message: state.message,
+                onRetry: () {
+                  context.read<SellerCubit>().loadSellers();
+                },
+              );
+            } else {
+              return AppErrorWidget(
+                message: state.message,
+                onRetry: () {
+                  context.read<SellerCubit>().loadSellers();
+                },
+              );
+            }
           } else if (state is SellerLoaded) {
             return Column(
               children: [
