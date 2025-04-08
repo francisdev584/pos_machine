@@ -162,7 +162,7 @@ class ProductListItem extends StatelessWidget {
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12.r),
-                        color: Colors.white.withOpacity(0.5),
+                        color: Colors.white.withAlpha(128),
                       ),
                       child: Center(
                         child: Container(
@@ -171,7 +171,7 @@ class ProductListItem extends StatelessWidget {
                             vertical: 4.h,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.red.withOpacity(0.8),
+                            color: Colors.red.withAlpha(204),
                             borderRadius: BorderRadius.circular(4.r),
                           ),
                           child: Text(
