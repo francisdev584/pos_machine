@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:pos_machine/core/services/interfaces/cache_service.dart';
 
@@ -28,7 +29,7 @@ abstract class BaseRepository {
       // Se já for Map
       return fromJson(cachedData as Map<String, dynamic>);
     } catch (e) {
-      print('Erro ao converter cache: $e');
+      log('Erro ao converter cache: $e');
       return null;
     }
   }
