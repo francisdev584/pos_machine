@@ -4,10 +4,11 @@ import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:pos_machine/core/config/env_config.dart';
-import 'package:pos_machine/core/services/cache_service.dart';
-import 'package:pos_machine/core/services/interfaces/secure_storage_interface.dart';
+import 'package:pos_machine/core/services/cache_service_impl.dart';
+import 'package:pos_machine/core/services/interfaces/cache_service.dart';
+import 'package:pos_machine/core/services/interfaces/secure_storage.dart';
 import 'package:pos_machine/core/services/network/dio_interceptors.dart';
-import 'package:pos_machine/core/services/secure_storage_service.dart';
+import 'package:pos_machine/core/services/secure_storage_service_impl.dart';
 import 'package:pos_machine/features/admin/service/cubit/admin_sale_cubit.dart';
 import 'package:pos_machine/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:pos_machine/features/auth/domain/repositories/auth_repository.dart';
@@ -34,16 +35,15 @@ Future<void> init() async {
       sendTimeout: Duration(milliseconds: EnvConfig.apiTimeout),
     ),
   );
-
   getIt.registerLazySingleton(() => dio);
   final sharedPreferences = await SharedPreferences.getInstance();
   getIt.registerLazySingleton(() => sharedPreferences);
   getIt.registerLazySingleton(() => const FlutterSecureStorage());
 
   // Services
-  getIt.registerLazySingleton<CacheService>(() => CacheService(getIt()));
+  getIt.registerLazySingleton<CacheService>(() => CacheServiceImpl(getIt()));
   getIt.registerLazySingleton<SecureStorage>(
-    () => SecureStorageService(getIt()),
+    () => SecureStorageServiceImpl(getIt()),
   );
 
   // Repositories
@@ -61,9 +61,9 @@ Future<void> init() async {
   );
 
   // Configurar Dio com interceptadores
-  dio.interceptors.add(ErrorInterceptor());
-  dio.interceptors.add(RetryInterceptor(dio: getIt()));
-  dio.interceptors.add(AuthInterceptor(getIt()));
+  getIt<Dio>().interceptors.add(ErrorInterceptor());
+  getIt<Dio>().interceptors.add(RetryInterceptor(dio: getIt()));
+  getIt<Dio>().interceptors.add(AuthInterceptor(getIt()));
 
   // Cubits
   getIt.registerFactory(() => SellerCubit(repository: getIt()));

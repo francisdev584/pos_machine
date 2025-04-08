@@ -1,11 +1,11 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-import 'package:pos_machine/core/services/interfaces/secure_storage_interface.dart';
+import 'package:pos_machine/core/services/interfaces/secure_storage.dart';
 
-class SecureStorageService implements SecureStorage {
+class SecureStorageServiceImpl implements SecureStorage {
   final FlutterSecureStorage _storage;
 
-  SecureStorageService(this._storage);
+  SecureStorageServiceImpl(this._storage);
 
   @override
   Future<void> saveToken({required String key, required String value}) async {

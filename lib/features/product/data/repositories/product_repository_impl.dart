@@ -5,10 +5,10 @@ import 'package:pos_machine/features/product/domain/entities/product.dart';
 import 'package:pos_machine/features/product/domain/repositories/product_repository.dart';
 
 class ProductRepositoryImpl extends ProductRepository {
-  final Dio _dio;
+  final Dio _networkService;
   static const Duration _cacheExpiration = Duration(minutes: 5);
 
-  ProductRepositoryImpl(Dio dio, super.cacheService) : _dio = dio;
+  ProductRepositoryImpl(this._networkService, super.cacheService);
 
   @override
   Future<Product> getProductById(int id, {bool forceRefresh = false}) async {
@@ -24,7 +24,7 @@ class ProductRepositoryImpl extends ProductRepository {
         }
       }
 
-      final response = await _dio.get('/products/$id');
+      final response = await _networkService.get('/products/$id');
       final product = Product.fromJson(response.data as Map<String, dynamic>);
 
       await saveToCache(
@@ -45,7 +45,7 @@ class ProductRepositoryImpl extends ProductRepository {
   Future<List<Product>> getProducts({bool forceRefresh = false}) async {
     try {
       if (!forceRefresh) {
-        final cachedProducts = await getFromCache<List<dynamic>>(
+        final cachedProducts = await getFromCache<List<Product>>(
           'products',
           (json) =>
               (json['products'] as List)
@@ -57,7 +57,7 @@ class ProductRepositoryImpl extends ProductRepository {
         }
       }
 
-      final response = await _dio.get('/products');
+      final response = await _networkService.get('/products');
       final products =
           (response.data as List)
               .map((json) => Product.fromJson(json as Map<String, dynamic>))

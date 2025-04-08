@@ -6,14 +6,14 @@ import 'package:pos_machine/features/seller/domain/entities/seller.dart';
 import 'package:pos_machine/features/seller/domain/repositories/seller_repository.dart';
 
 class SellerRepositoryImpl extends SellerRepository {
-  final Dio _dio;
+  final Dio _networkService;
 
-  SellerRepositoryImpl(Dio dio, super.cacheService) : _dio = dio;
+  SellerRepositoryImpl(this._networkService, super.cacheService);
 
   @override
   Future<List<Seller>> getSellers() async {
     try {
-      final response = await _dio.get('/users');
+      final response = await _networkService.get('/users');
 
       if (response.statusCode == 200) {
         final List<dynamic> data = response.data;

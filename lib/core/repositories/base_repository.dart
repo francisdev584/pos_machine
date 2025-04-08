@@ -1,4 +1,6 @@
-import 'package:pos_machine/core/services/cache_service.dart';
+import 'dart:convert';
+
+import 'package:pos_machine/core/services/interfaces/cache_service.dart';
 
 abstract class BaseRepository {
   final CacheService _cacheService;
@@ -11,7 +13,24 @@ abstract class BaseRepository {
   ) async {
     final cachedData = await _cacheService.get(key);
     if (cachedData == null) return null;
-    return fromJson(cachedData);
+
+    try {
+      // Se for string, tenta converter para Map
+      if (cachedData is String) {
+        if (cachedData.startsWith('{') && cachedData.endsWith('}')) {
+          // Tenta como JSON válido
+          return fromJson(jsonDecode(cachedData));
+        } else {
+          // Dados corrompidos ou em formato inválido
+          return null;
+        }
+      }
+      // Se já for Map
+      return fromJson(cachedData as Map<String, dynamic>);
+    } catch (e) {
+      print('Erro ao converter cache: $e');
+      return null;
+    }
   }
 
   Future<void> saveToCache<T>(
@@ -20,7 +39,9 @@ abstract class BaseRepository {
     Map<String, dynamic> Function(T) toJson, {
     Duration? expiration,
   }) async {
-    await _cacheService.save(key, toJson(data), expiration: expiration);
+    final json = toJson(data);
+    final jsonString = jsonEncode(json);
+    await _cacheService.save(key, jsonString, expiration: expiration);
   }
 
   Future<void> clearCache(String key) async {

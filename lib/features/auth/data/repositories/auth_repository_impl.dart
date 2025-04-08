@@ -1,25 +1,25 @@
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:pos_machine/core/services/interfaces/secure_storage_interface.dart';
+import 'package:pos_machine/core/services/interfaces/secure_storage.dart';
 import 'package:pos_machine/core/utils/error_handler.dart';
 import 'package:pos_machine/features/auth/domain/entities/auth_credentials.dart';
 import 'package:pos_machine/features/auth/domain/repositories/auth_repository.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final SecureStorage _secureStorage;
-  final Dio _dio;
+  final Dio _networkService;
 
   static const String _tokenKey = 'admin_token';
   static const String _tokenExpiryKey = 'admin_token_expiry';
   static const int _sessionTimeoutMinutes = 30; // 30 minutos de timeout
 
-  AuthRepositoryImpl(this._secureStorage, this._dio);
+  AuthRepositoryImpl(this._secureStorage, this._networkService);
 
   @override
   Future<String> login(AuthCredentials credentials) async {
     try {
-      final response = await _dio.post(
+      final response = await _networkService.post(
         '/auth/login',
         data: credentials.toJson(),
       );

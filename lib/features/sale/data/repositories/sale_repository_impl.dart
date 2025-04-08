@@ -6,14 +6,14 @@ import 'package:pos_machine/features/sale/domain/entities/sale.dart';
 import 'package:pos_machine/features/sale/domain/repositories/sale_repository.dart';
 
 class SaleRepositoryImpl implements SaleRepository {
-  final Dio _dio;
+  final Dio _networkService;
 
-  SaleRepositoryImpl(Dio dio) : _dio = dio;
+  SaleRepositoryImpl(this._networkService);
 
   @override
   Future<void> createSale(int userId, List<Product> products) async {
     try {
-      final response = await _dio.post(
+      final response = await _networkService.post(
         '/carts',
         data: {
           'userId': userId,
@@ -49,7 +49,7 @@ class SaleRepositoryImpl implements SaleRepository {
   @override
   Future<void> cancelSale(int saleId) async {
     try {
-      final response = await _dio.delete('/carts/$saleId');
+      final response = await _networkService.delete('/carts/$saleId');
 
       if (response.statusCode != 200) {
         throw AppException(
@@ -66,7 +66,7 @@ class SaleRepositoryImpl implements SaleRepository {
   @override
   Future<List<Sale>> getSales() async {
     try {
-      final response = await _dio.get('/carts');
+      final response = await _networkService.get('/carts');
 
       if (response.statusCode == 200) {
         final List<dynamic> data = response.data;
