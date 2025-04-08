@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'package:pos_machine/features/auth/presentation/pages/admin_home_page.dart';
+import 'package:pos_machine/features/admin/presentation/pages/admin_home_page.dart';
+import 'package:pos_machine/features/admin/presentation/pages/admin_sale_page.dart';
 import 'package:pos_machine/features/auth/presentation/pages/admin_login_page.dart';
 import 'package:pos_machine/features/home/presentation/pages/home_page.dart';
 import 'package:pos_machine/features/product/presentation/pages/product_page.dart';
 import 'package:pos_machine/features/sale/domain/entities/sale.dart';
-import 'package:pos_machine/features/sale/presentation/pages/admin_sale_page.dart';
 import 'package:pos_machine/features/sale/presentation/pages/cash_payment_page.dart';
 import 'package:pos_machine/features/sale/presentation/pages/payment_success_page.dart';
 import 'package:pos_machine/features/sale/presentation/pages/sale_summary_page.dart';

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:pos_machine/core/navigation/routes.dart';
-import 'package:pos_machine/core/widgets/scale_button.dart';
+import 'package:pos_machine/shared/widgets/scale_button.dart';
 
 class NavigationButtons extends StatelessWidget {
   final VoidCallback? onNewSalePressed;

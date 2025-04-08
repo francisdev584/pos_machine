@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'package:pos_machine/core/widgets/confetti_animation.dart';
+import 'package:pos_machine/features/sale/presentation/widgets/confetti_animation.dart';
 import 'package:pos_machine/features/sale/domain/entities/sale.dart';
 import 'package:pos_machine/features/sale/presentation/widgets/navigation_buttons.dart';
 import 'package:pos_machine/features/sale/presentation/widgets/payment_summary_card.dart';

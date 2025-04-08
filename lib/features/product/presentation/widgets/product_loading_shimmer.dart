@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'package:pos_machine/core/widgets/shimmer_loading_effect.dart';
+import 'package:pos_machine/shared/widgets/shimmer_loading_effect.dart';
 
 class ProductLoadingShimmer extends StatelessWidget {
   const ProductLoadingShimmer({super.key});

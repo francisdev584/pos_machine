@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:pos_machine/core/theme/app_theme.dart';
-import 'package:pos_machine/features/sale/service/cubit/admin_sale_cubit.dart';
+import 'package:pos_machine/features/admin/service/cubit/admin_sale_cubit.dart';
 
 class AdminSalePage extends StatefulWidget {
   const AdminSalePage({super.key});
