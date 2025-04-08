@@ -55,6 +55,18 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                 backgroundColor: Colors.red,
               ),
             );
+          } else if (state is AuthSessionExpired) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                  'Sua sessão expirou. Por favor, faça login novamente.',
+                ),
+                backgroundColor: Colors.red,
+              ),
+            );
+            Navigator.of(
+              context,
+            ).pushNamedAndRemoveUntil(Routes.home, (route) => false);
           }
         }
       },
@@ -89,6 +101,9 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                         TextFormField(
                           controller: _usernameController,
                           enabled: !_isLoading,
+                          enableSuggestions: false,
+                          autocorrect: false,
+                          textInputAction: TextInputAction.next,
                           decoration: InputDecoration(
                             hintText: 'Digite seu usuário',
                             hintStyle: TextStyle(color: Colors.grey[400]),
@@ -119,6 +134,17 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                           controller: _passwordController,
                           enabled: !_isLoading,
                           obscureText: true,
+                          enableSuggestions: false,
+                          autocorrect: false,
+                          textInputAction: TextInputAction.done,
+                          onFieldSubmitted: (value) {
+                            if (_formKey.currentState!.validate()) {
+                              context.read<AuthCubit>().login(
+                                _usernameController.text,
+                                _passwordController.text,
+                              );
+                            }
+                          },
                           decoration: InputDecoration(
                             hintText: 'Digite sua senha',
                             hintStyle: TextStyle(color: Colors.grey[400]),

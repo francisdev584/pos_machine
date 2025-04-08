@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:pos_machine/core/services/interfaces/secure_storage_interface.dart';
 import 'package:pos_machine/features/auth/domain/entities/auth_credentials.dart';
@@ -7,6 +8,10 @@ import 'package:pos_machine/features/auth/domain/repositories/auth_repository.da
 class AuthRepositoryImpl implements AuthRepository {
   final SecureStorage _secureStorage;
   final Dio _dio;
+
+  static const String _tokenKey = 'admin_token';
+  static const String _tokenExpiryKey = 'admin_token_expiry';
+  static const int _sessionTimeoutMinutes = 30; // 30 minutos de timeout
 
   AuthRepositoryImpl(this._secureStorage, this._dio);
 
@@ -20,8 +25,13 @@ class AuthRepositoryImpl implements AuthRepository {
 
       if (response.statusCode == 200) {
         final token = response.data['token'] as String;
-        var key = 'admin_token';
-        await _secureStorage.saveToken(key: key, value: token);
+
+        // Salvar o token
+        await _secureStorage.saveToken(key: _tokenKey, value: token);
+
+        // Salvar o tempo de expiração
+        await _saveExpiryTimestamp();
+
         return token;
       } else {
         throw AuthException('Falha na autenticação');
@@ -43,20 +53,61 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<void> logout() async {
-    var key = 'admin_token';
-    await _secureStorage.deleteToken(key: key);
+    await _secureStorage.deleteToken(key: _tokenKey);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_tokenExpiryKey);
   }
 
   @override
   Future<bool> isAuthenticated() async {
-    var key = 'admin_token';
-    return await _secureStorage.hasToken(key: key);
+    final hasToken = await _secureStorage.hasToken(key: _tokenKey);
+    if (!hasToken) return false;
+
+    // Verificar se a sessão expirou
+    return !await _isSessionExpired();
   }
 
   @override
   Future<String?> getToken() async {
-    var key = 'admin_token';
-    return await _secureStorage.getToken(key: key);
+    if (await _isSessionExpired()) {
+      await logout();
+      return null;
+    }
+
+    // Renovar o tempo de expiração ao acessar o token
+    await _saveExpiryTimestamp();
+    return await _secureStorage.getToken(key: _tokenKey);
+  }
+
+  @override
+  Future<bool> refreshSession() async {
+    final hasToken = await _secureStorage.hasToken(key: _tokenKey);
+    if (!hasToken) return false;
+
+    await _saveExpiryTimestamp();
+    return true;
+  }
+
+  // Salva o timestamp de expiração
+  Future<void> _saveExpiryTimestamp() async {
+    final expiryTime =
+        DateTime.now()
+            .add(Duration(minutes: _sessionTimeoutMinutes))
+            .millisecondsSinceEpoch;
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_tokenExpiryKey, expiryTime);
+  }
+
+  // Verifica se a sessão expirou com base no timestamp
+  Future<bool> _isSessionExpired() async {
+    final prefs = await SharedPreferences.getInstance();
+    final expiryTimestamp = prefs.getInt(_tokenExpiryKey);
+
+    if (expiryTimestamp == null) return true;
+
+    final now = DateTime.now().millisecondsSinceEpoch;
+    return now > expiryTimestamp;
   }
 }
 
