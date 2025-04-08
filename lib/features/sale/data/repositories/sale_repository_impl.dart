@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 
+import 'package:pos_machine/core/utils/error_handler.dart';
 import 'package:pos_machine/features/product/domain/entities/product.dart';
 import 'package:pos_machine/features/sale/domain/entities/sale.dart';
 import 'package:pos_machine/features/sale/domain/repositories/sale_repository.dart';
@@ -34,10 +35,14 @@ class SaleRepositoryImpl implements SaleRepository {
       );
 
       if (response.statusCode != 200) {
-        throw Exception('Falha ao criar venda');
+        throw AppException(
+          'Falha ao criar venda: código ${response.statusCode}',
+        );
       }
+    } on DioException catch (e) {
+      throw AppException('Erro ao criar venda: ${e.error}');
     } catch (e) {
-      throw Exception('Erro ao criar venda: ${e.toString()}');
+      throw AppException('Erro ao criar venda: ${e.toString()}');
     }
   }
 
@@ -47,10 +52,14 @@ class SaleRepositoryImpl implements SaleRepository {
       final response = await _dio.delete('/carts/$saleId');
 
       if (response.statusCode != 200) {
-        throw Exception('Falha ao cancelar venda');
+        throw AppException(
+          'Falha ao cancelar venda: código ${response.statusCode}',
+        );
       }
+    } on DioException catch (e) {
+      throw AppException('Erro ao cancelar venda: ${e.error}');
     } catch (e) {
-      throw Exception('Erro ao cancelar venda: ${e.toString()}');
+      throw AppException('Erro ao cancelar venda: ${e.toString()}');
     }
   }
 
@@ -84,10 +93,14 @@ class SaleRepositoryImpl implements SaleRepository {
           );
         }).toList();
       } else {
-        throw Exception('Falha ao carregar vendas');
+        throw AppException(
+          'Falha ao carregar vendas: código ${response.statusCode}',
+        );
       }
+    } on DioException catch (e) {
+      throw AppException('Erro ao carregar vendas: ${e.error}');
     } catch (e) {
-      throw Exception('Erro ao carregar vendas: ${e.toString()}');
+      throw AppException('Erro ao carregar vendas: ${e.toString()}');
     }
   }
 }

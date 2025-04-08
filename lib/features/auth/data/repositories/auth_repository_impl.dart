@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:pos_machine/core/services/interfaces/secure_storage_interface.dart';
+import 'package:pos_machine/core/utils/error_handler.dart';
 import 'package:pos_machine/features/auth/domain/entities/auth_credentials.dart';
 import 'package:pos_machine/features/auth/domain/repositories/auth_repository.dart';
 
@@ -34,20 +35,21 @@ class AuthRepositoryImpl implements AuthRepository {
 
         return token;
       } else {
-        throw AuthException('Falha na autenticação');
+        throw AppException('Falha na autenticação');
       }
     } on DioException catch (e) {
-      if (e.type == DioExceptionType.connectionTimeout ||
-          e.type == DioExceptionType.receiveTimeout ||
-          e.type == DioExceptionType.sendTimeout) {
-        throw AuthException('Tempo limite de conexão excedido');
-      } else if (e.response?.statusCode == 401) {
-        throw AuthException('Usuário ou senha inválidos');
-      } else {
-        throw AuthException('Erro ao conectar com o servidor');
+      // O tratamento de erros agora é feito pelo interceptor,
+      // mas ainda podemos adicionar lógica específica de autenticação aqui
+      if (e.response?.statusCode == 401) {
+        throw AppException('Usuário ou senha inválidos');
       }
+
+      // Utilize a mensagem amigável já formatada pelo interceptor
+      throw AppException(e.error.toString());
     } catch (e) {
-      throw AuthException('Erro inesperado durante a autenticação');
+      throw AppException(
+        'Erro inesperado durante a autenticação: ${e.toString()}',
+      );
     }
   }
 
@@ -109,13 +111,4 @@ class AuthRepositoryImpl implements AuthRepository {
     final now = DateTime.now().millisecondsSinceEpoch;
     return now > expiryTimestamp;
   }
-}
-
-class AuthException implements Exception {
-  final String message;
-
-  AuthException(this.message);
-
-  @override
-  String toString() => message;
 }

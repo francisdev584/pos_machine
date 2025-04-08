@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 
+import 'package:pos_machine/core/utils/error_handler.dart';
 import 'package:pos_machine/features/product/domain/entities/product.dart';
 import 'package:pos_machine/features/product/domain/repositories/product_repository.dart';
 
@@ -33,8 +34,10 @@ class ProductRepositoryImpl extends ProductRepository {
         expiration: _cacheExpiration,
       );
       return product;
+    } on DioException catch (e) {
+      throw AppException('Erro ao buscar produto: ${e.error}');
     } catch (e) {
-      throw Exception('Erro ao buscar produto: $e');
+      throw AppException('Erro ao buscar produto: $e');
     }
   }
 
@@ -67,8 +70,10 @@ class ProductRepositoryImpl extends ProductRepository {
         expiration: _cacheExpiration,
       );
       return products;
+    } on DioException catch (e) {
+      throw AppException('Erro ao buscar produtos: ${e.error}');
     } catch (e) {
-      throw Exception('Erro ao buscar produtos: $e');
+      throw AppException('Erro ao buscar produtos: $e');
     }
   }
 
@@ -104,8 +109,10 @@ class ProductRepositoryImpl extends ProductRepository {
         expiration: _cacheExpiration,
       );
       return filteredProducts;
+    } on DioException catch (e) {
+      throw AppException('Erro ao buscar produtos por categoria: ${e.error}');
     } catch (e) {
-      throw Exception('Erro ao buscar produtos por categoria: $e');
+      throw AppException('Erro ao buscar produtos por categoria: $e');
     }
   }
 
@@ -134,8 +141,10 @@ class ProductRepositoryImpl extends ProductRepository {
         expiration: _cacheExpiration,
       );
       return categories;
+    } on DioException catch (e) {
+      throw AppException('Erro ao buscar categorias: ${e.error}');
     } catch (e) {
-      throw Exception('Erro ao buscar categorias: $e');
+      throw AppException('Erro ao buscar categorias: $e');
     }
   }
 
