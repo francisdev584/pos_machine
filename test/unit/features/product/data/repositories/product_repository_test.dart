@@ -1,13 +1,14 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:dio/dio.dart';
+
+import 'package:pos_machine/core/services/cache_service_impl.dart';
 import 'package:pos_machine/features/product/data/repositories/product_repository_impl.dart';
 import 'package:pos_machine/features/product/domain/entities/product.dart';
-import 'package:pos_machine/core/services/cache_service.dart';
 
 class MockDio extends Mock implements Dio {}
 
-class MockCacheService extends Mock implements CacheService {}
+class MockCacheService extends Mock implements CacheServiceImpl {}
 
 class MockResponse<T> extends Mock implements Response<T> {
   @override
