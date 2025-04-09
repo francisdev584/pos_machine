@@ -32,10 +32,12 @@ class HomePage extends StatelessWidget {
                       color: AppTheme.primaryColor,
                       borderRadius: BorderRadius.circular(24.r),
                     ),
-                    child: Icon(
-                      Icons.point_of_sale_outlined,
-                      color: Colors.white,
-                      size: 48.w,
+                    child: Padding(
+                      padding: EdgeInsets.all(4.w),
+                      child: Image.asset(
+                        'assets/icons/app_icon.png',
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ],
